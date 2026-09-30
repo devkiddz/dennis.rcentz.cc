@@ -60,16 +60,16 @@ export function DatabaseStage() {
   const record = records[recordIndex];
 
   return (
-    <div className="relative flex h-full flex-col overflow-hidden px-5 pb-4 pt-5 sm:px-7">
+    <div className="relative flex h-full flex-col overflow-hidden px-4 pb-4 pt-4 sm:px-7 sm:pt-5">
       {/* =====================================================
           HEADER
           ===================================================== */}
 
       <div className="relative z-30 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <Database className="size-[17px] text-brand-cyan" />
+          <Database className="size-[16px] text-brand-cyan sm:size-[17px]" />
 
-          <span className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[var(--workspace-text)]">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--workspace-text)] sm:text-[12px]">
             Data engine
           </span>
         </div>
@@ -81,7 +81,7 @@ export function DatabaseStage() {
             <span className="relative size-2 rounded-full bg-status-success" />
           </span>
 
-          <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--workspace-muted)]">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--workspace-muted)] sm:text-[11px]">
             Live
           </span>
         </div>
@@ -93,9 +93,11 @@ export function DatabaseStage() {
 
       <div className="relative flex min-h-0 flex-1 items-center justify-center">
         <div className="relative aspect-[16/9] w-full max-w-2xl">
-          {/* TECHNOLOGY */}
+          {/* =================================================
+              TECHNOLOGY
+              ================================================= */}
 
-          <div className="absolute left-1/2 top-[1%] z-30 -translate-x-1/2">
+          <div className="absolute left-1/2 top-0 z-30 -translate-x-1/2 sm:top-[1%]">
             <AnimatePresence mode="wait" initial={false}>
               <motion.p
                 key={technologies[technologyIndex]}
@@ -123,7 +125,7 @@ export function DatabaseStage() {
                   duration: 0.28,
                   ease: 'easeOut'
                 }}
-                className="whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.1em] text-brand-cyan">
+                className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-[0.1em] text-brand-cyan sm:text-[11px]">
                 {technologies[technologyIndex]}
               </motion.p>
             </AnimatePresence>
@@ -169,24 +171,25 @@ export function DatabaseStage() {
               SCHEMA NODES
               ================================================= */}
 
-          <div className="absolute left-[1%] top-[31%] z-30">
+          <div className="absolute left-0 top-[32%] z-30 sm:left-[1%] sm:top-[31%]">
             <SchemaNode label="User" meta="Identity" active={record.model === 'User'} accent="blue" />
           </div>
 
-          <div className="absolute right-[1%] top-[21%] z-30">
+          <div className="absolute right-0 top-[22%] z-30 sm:right-[1%] sm:top-[21%]">
             <SchemaNode label="Project" meta="Workflow" active={record.model === 'Project'} accent="teal" />
           </div>
 
-          <div className="absolute right-[2%] top-[61%] z-30">
+          <div className="absolute right-0 top-[62%] z-30 sm:right-[2%] sm:top-[61%]">
             <SchemaNode label="Activity" meta="Events" active={record.model === 'Activity'} accent="green" />
           </div>
 
           {/* =================================================
               DATABASE
-              Keep approved scale/composition.
+              Desktop scale preserved.
+              Mobile relaxed to prevent node collision.
               ================================================= */}
 
-          <div className="absolute left-1/2 top-[53%] z-20 w-[44%] min-w-52 max-w-72 -translate-x-1/2 -translate-y-1/2">
+          <div className="absolute left-1/2 top-[53%] z-20 w-[47%] min-w-40 max-w-72 -translate-x-1/2 -translate-y-1/2 sm:w-[44%] sm:min-w-52">
             <DatabaseVisual reduceMotion={reduceMotion} />
           </div>
         </div>
@@ -194,10 +197,28 @@ export function DatabaseStage() {
 
       {/* =====================================================
           BOTTOM FLOW
+          Mobile = cards row + centered pipeline
+          Desktop = original 3-column system
           ===================================================== */}
 
       <div className="relative z-30 mx-auto w-full max-w-3xl">
-        <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,0.78fr)] items-center gap-3">
+        {/* MOBILE */}
+
+        <div className="grid gap-2.5 sm:hidden">
+          <div className="grid grid-cols-2 gap-2.5">
+            <MutationCard command={record.command} compact />
+
+            <StatusCard compact />
+          </div>
+
+          <div className="flex justify-center pt-0.5">
+            <Pipeline reduceMotion={reduceMotion} compact />
+          </div>
+        </div>
+
+        {/* TABLET / DESKTOP */}
+
+        <div className="hidden grid-cols-[minmax(0,1fr)_auto_minmax(0,0.78fr)] items-center gap-3 sm:grid">
           <MutationCard command={record.command} />
 
           <Pipeline reduceMotion={reduceMotion} />
@@ -312,6 +333,10 @@ function DatabaseVisual({ reduceMotion }: { reduceMotion: boolean }) {
         </motion.div>
       </div>
 
+      {/* =====================================================
+          PROTECTED DATABASE IMAGE
+          ===================================================== */}
+
       <div
         className="protected-asset absolute inset-0 z-10"
         onContextMenu={event => event.preventDefault()}
@@ -322,7 +347,7 @@ function DatabaseVisual({ reduceMotion }: { reduceMotion: boolean }) {
           fill
           priority
           draggable={false}
-          sizes="288px"
+          sizes="(max-width: 639px) 180px, 288px"
           className="protected-asset pointer-events-none object-contain"
         />
       </div>
@@ -370,12 +395,20 @@ function DatabaseVisual({ reduceMotion }: { reduceMotion: boolean }) {
    MUTATION CARD
    ========================================================= */
 
-function MutationCard({ command }: { command: string }) {
+function MutationCard({ command, compact = false }: { command: string; compact?: boolean }) {
   return (
-    <div className="min-w-0 rounded-2xl border border-brand-cyan/25 bg-[var(--workspace-surface-strong)] px-4 py-3.5 backdrop-blur-xl sm:px-5">
-      <div className="flex items-center justify-between gap-4">
+    <div
+      className={[
+        'min-w-0 rounded-2xl border border-brand-cyan/25 bg-[var(--workspace-surface-strong)] backdrop-blur-xl',
+        compact ? 'px-3 py-2.5' : 'px-4 py-3.5 sm:px-5'
+      ].join(' ')}>
+      <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--workspace-muted)]">
+          <p
+            className={[
+              'font-medium uppercase tracking-[0.08em] text-[var(--workspace-muted)]',
+              compact ? 'text-[9px]' : 'text-[11px]'
+            ].join(' ')}>
             Mutation stream
           </p>
 
@@ -398,13 +431,18 @@ function MutationCard({ command }: { command: string }) {
                 duration: 0.24,
                 ease: 'easeOut'
               }}
-              className="mt-1.5 truncate text-[12px] font-semibold text-brand-cyan">
+              className={[
+                'truncate font-semibold text-brand-cyan',
+                compact ? 'mt-1 text-[10px]' : 'mt-1.5 text-[12px]'
+              ].join(' ')}>
               {command}
             </motion.p>
           </AnimatePresence>
         </div>
 
-        <Activity className="size-[17px] shrink-0 text-brand-teal" />
+        <Activity
+          className={['shrink-0 text-brand-teal', compact ? 'size-[14px]' : 'size-[17px]'].join(' ')}
+        />
       </div>
     </div>
   );
@@ -414,23 +452,35 @@ function MutationCard({ command }: { command: string }) {
    PIPELINE
    ========================================================= */
 
-function Pipeline({ reduceMotion }: { reduceMotion: boolean }) {
+function Pipeline({ reduceMotion, compact = false }: { reduceMotion: boolean; compact?: boolean }) {
   return (
     <div className="flex items-center">
       {pipeline.map((step, index) => (
         <div key={step} className="flex items-center">
-          <div className="flex flex-col items-center gap-1.5">
-            <span className="flex size-7 items-center justify-center rounded-full border border-brand-teal/35 bg-brand-teal/10">
-              <CheckCircle2 className="size-3.5 text-brand-teal" />
+          <div className={['flex flex-col items-center', compact ? 'gap-1' : 'gap-1.5'].join(' ')}>
+            <span
+              className={[
+                'flex items-center justify-center rounded-full border border-brand-teal/35 bg-brand-teal/10',
+                compact ? 'size-6' : 'size-7'
+              ].join(' ')}>
+              <CheckCircle2 className={['text-brand-teal', compact ? 'size-3' : 'size-3.5'].join(' ')} />
             </span>
 
-            <span className="text-[10px] font-semibold uppercase tracking-[0.04em] text-[var(--workspace-muted)]">
+            <span
+              className={[
+                'font-semibold uppercase tracking-[0.04em] text-[var(--workspace-muted)]',
+                compact ? 'text-[8px]' : 'text-[10px]'
+              ].join(' ')}>
               {step}
             </span>
           </div>
 
           {index < pipeline.length - 1 ? (
-            <div className="relative mb-5 w-7 overflow-hidden border-t border-[var(--workspace-divider)] sm:w-8">
+            <div
+              className={[
+                'relative overflow-hidden border-t border-[var(--workspace-divider)]',
+                compact ? 'mb-4 w-5' : 'mb-5 w-7 sm:w-8'
+              ].join(' ')}>
               <motion.span
                 animate={
                   reduceMotion
@@ -459,19 +509,35 @@ function Pipeline({ reduceMotion }: { reduceMotion: boolean }) {
    STATUS CARD
    ========================================================= */
 
-function StatusCard() {
+function StatusCard({ compact = false }: { compact?: boolean }) {
   return (
-    <div className="min-w-0 rounded-2xl border border-status-success/25 bg-[var(--workspace-surface-strong)] px-4 py-3.5 backdrop-blur-xl sm:px-5">
-      <div className="flex items-center justify-between gap-4">
+    <div
+      className={[
+        'min-w-0 rounded-2xl border border-status-success/25 bg-[var(--workspace-surface-strong)] backdrop-blur-xl',
+        compact ? 'px-3 py-2.5' : 'px-4 py-3.5 sm:px-5'
+      ].join(' ')}>
+      <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--workspace-muted)]">
+          <p
+            className={[
+              'font-medium uppercase tracking-[0.08em] text-[var(--workspace-muted)]',
+              compact ? 'text-[9px]' : 'text-[11px]'
+            ].join(' ')}>
             Relational system
           </p>
 
-          <p className="mt-1.5 text-[12px] font-semibold text-status-success">Persisted</p>
+          <p
+            className={[
+              'font-semibold text-status-success',
+              compact ? 'mt-1 text-[10px]' : 'mt-1.5 text-[12px]'
+            ].join(' ')}>
+            Persisted
+          </p>
         </div>
 
-        <Layers3 className="size-[17px] shrink-0 text-brand-cyan" />
+        <Layers3
+          className={['shrink-0 text-brand-cyan', compact ? 'size-[14px]' : 'size-[17px]'].join(' ')}
+        />
       </div>
     </div>
   );
@@ -494,9 +560,7 @@ function SchemaNode({
 }) {
   const activeStyles: Record<SchemaAccent, string> = {
     blue: 'border-brand-blue/45 bg-brand-blue/10',
-
     teal: 'border-brand-teal/45 bg-brand-teal/10',
-
     green: 'border-brand-green/45 bg-brand-green/10'
   };
 
@@ -517,25 +581,28 @@ function SchemaNode({
         ease: 'easeOut'
       }}
       className={[
-        'min-w-28',
-        'rounded-2xl',
+        'min-w-24 sm:min-w-28',
+        'rounded-xl sm:rounded-2xl',
         'border',
-        'px-4',
-        'py-3',
+        'px-3 sm:px-4',
+        'py-2.5 sm:py-3',
         'backdrop-blur-xl',
         active ? activeStyles[accent] : 'border-[var(--workspace-divider)] bg-[var(--workspace-node)]'
       ].join(' ')}>
-      <div className="flex items-center gap-2.5">
+      <div className="flex items-center gap-2 sm:gap-2.5">
         <GitBranch
-          className={['size-4 shrink-0', active ? iconStyles[accent] : 'text-[var(--workspace-muted)]'].join(
-            ' '
-          )}
+          className={[
+            'size-3.5 shrink-0 sm:size-4',
+            active ? iconStyles[accent] : 'text-[var(--workspace-muted)]'
+          ].join(' ')}
         />
 
-        <span className="text-[12px] font-semibold text-[var(--workspace-text)]">{label}</span>
+        <span className="text-[10px] font-semibold text-[var(--workspace-text)] sm:text-[12px]">{label}</span>
       </div>
 
-      <p className="mt-1.5 text-[11px] font-medium text-[var(--workspace-muted)]">{meta}</p>
+      <p className="mt-1 text-[9px] font-medium text-[var(--workspace-muted)] sm:mt-1.5 sm:text-[11px]">
+        {meta}
+      </p>
     </motion.div>
   );
 }
