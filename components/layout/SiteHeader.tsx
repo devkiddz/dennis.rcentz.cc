@@ -44,8 +44,8 @@ const navItems = [
     icon: FolderKanban
   },
   {
-    label: 'Ask Dennis',
-    href: '#ask-dennis',
+    label: 'Ask Denok',
+    href: '#denok',
     icon: Bot
   }
 ] as const;
@@ -78,21 +78,21 @@ export function SiteHeader() {
 
         <div className="hidden justify-center lg:flex">
           <div className="portfolio-nav-shell">
-            <div className="portfolio-nav-inner gap-1 p-2">
+            <div className="portfolio-nav-inner gap-0.5 p-1">
               {navItems.map(({ label, href, icon: Icon }, index) => (
                 <a
                   key={label}
                   href={href}
                   data-active={index === 0 ? 'true' : undefined}
-                  className="nav-link h-10 px-4">
-                  <Icon size={17} strokeWidth={2} />
+                  className="nav-link h-8 px-3 text-[12px]">
+                  <Icon size={14} strokeWidth={2} />
 
                   <span>{label}</span>
                 </a>
               ))}
 
-              <div className="ml-2 border-l border-border/60 pl-3">
-                <ThemeSwitch isClient={isClient} dark={dark} onToggle={toggleTheme} />
+              <div className="ml-1 border-l border-border/50 pl-2">
+                <ThemeSwitch isClient={isClient} dark={dark} onToggle={toggleTheme} compact />
               </div>
             </div>
           </div>
@@ -127,8 +127,8 @@ export function SiteHeader() {
               onClick={() => setMobileOpen(value => !value)}
               aria-label={mobileOpen ? 'Close navigation' : 'Open navigation'}
               aria-expanded={mobileOpen}
-              className="glass-panel flex size-10 shrink-0 items-center justify-center rounded-full">
-              {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+              className="glass-panel flex size-10 shrink-0 items-center justify-center rounded-full transition hover:border-brand-cyan/40">
+              {mobileOpen ? <X size={17} strokeWidth={2} /> : <Menu size={17} strokeWidth={2} />}
             </button>
           </div>
         </div>
@@ -139,7 +139,7 @@ export function SiteHeader() {
 
         {mobileOpen ? (
           <div className="mt-4 w-full lg:hidden">
-            <nav className="w-full border-y border-border/60 bg-[var(--nav-background)] p-4 backdrop-blur-[22px]">
+            <nav className="mobile-nav-panel w-full">
               <div className="flex w-full flex-col space-y-1">
                 {navItems.map(({ label, href, icon: Icon }, index) => (
                   <a
@@ -147,9 +147,9 @@ export function SiteHeader() {
                     href={href}
                     data-active={index === 0 ? 'true' : undefined}
                     onClick={() => setMobileOpen(false)}
-                    className="nav-link min-h-12 w-full px-5">
+                    className="nav-link min-h-11 w-full px-4">
                     <span className="mr-auto flex items-center space-x-3">
-                      <Icon size={18} strokeWidth={2} className="shrink-0" />
+                      <Icon size={17} strokeWidth={2} className="shrink-0" />
 
                       <span>{label}</span>
                     </span>
@@ -171,18 +171,44 @@ export function SiteHeader() {
 function ThemeSwitch({
   isClient,
   dark,
-  onToggle
+  onToggle,
+  compact = false
 }: {
   isClient: boolean;
   dark: boolean;
   onToggle: () => void;
+  compact?: boolean;
 }) {
+  const dimensions = compact
+    ? {
+        shell: 'h-7 w-[52px]',
+        thumb: 'size-5',
+        sun: 'left-[7px]',
+        moon: 'right-[7px]',
+        translate: 'translate-x-6'
+      }
+    : {
+        shell: 'h-8 w-[60px]',
+        thumb: 'size-6',
+        sun: 'left-2',
+        moon: 'right-2',
+        translate: 'translate-x-7'
+      };
+
   if (!isClient) {
     return (
       <div
         aria-hidden="true"
-        className="relative h-9 w-[68px] shrink-0 rounded-full border border-border/70 bg-background/55 p-1">
-        <span className="absolute left-1 top-1 size-7 rounded-full border border-border/80 bg-card" />
+        className={[
+          'relative shrink-0 rounded-full border border-border/70 bg-background/55 p-1',
+          dimensions.shell
+        ].join(' ')}>
+        <span
+          className={[
+            'absolute left-1 top-1 rounded-full border border-border/80 bg-card',
+            dimensions.thumb
+          ].join(' ')}
+        />
       </div>
     );
   }
@@ -193,27 +219,33 @@ function ThemeSwitch({
       onClick={onToggle}
       aria-label={dark ? 'Switch to light theme' : 'Switch to dark theme'}
       aria-pressed={dark}
-      className="group relative flex h-9 w-[68px] shrink-0 items-center rounded-full border border-border/70 bg-background/55 p-1 shadow-inner backdrop-blur-xl transition hover:border-brand-cyan/50">
+      className={[
+        'group relative flex shrink-0 items-center rounded-full border border-border/70 bg-background/55 p-1 shadow-inner backdrop-blur-xl transition hover:border-brand-cyan/50',
+        dimensions.shell
+      ].join(' ')}>
       <span
         className={[
-          'absolute left-2 z-10 flex size-5 items-center justify-center transition-colors',
+          'absolute z-10 flex size-4 items-center justify-center transition-colors',
+          dimensions.sun,
           dark ? 'text-[var(--workspace-faint)]' : 'text-brand-gold'
         ].join(' ')}>
-        <Sun size={13} strokeWidth={2.2} />
+        <Sun size={compact ? 11 : 12} strokeWidth={2.2} />
       </span>
 
       <span
         className={[
-          'absolute right-2 z-10 flex size-5 items-center justify-center transition-colors',
+          'absolute z-10 flex size-4 items-center justify-center transition-colors',
+          dimensions.moon,
           dark ? 'text-brand-cyan' : 'text-[var(--workspace-faint)]'
         ].join(' ')}>
-        <Moon size={13} strokeWidth={2.2} />
+        <Moon size={compact ? 11 : 12} strokeWidth={2.2} />
       </span>
 
       <span
         className={[
-          'absolute left-1 top-1 size-7 rounded-full border border-border/80 bg-card transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
-          dark ? 'translate-x-8' : 'translate-x-0'
+          'absolute left-1 top-1 rounded-full border border-border/80 bg-card transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
+          dimensions.thumb,
+          dark ? dimensions.translate : 'translate-x-0'
         ].join(' ')}
       />
     </button>

@@ -18,9 +18,7 @@ export function HeroStage() {
   const [phase, setPhase] = useState<HeroPhase>('code');
 
   const handleCodeComplete = useCallback(() => {
-    if (reduceMotion) {
-      return;
-    }
+    if (reduceMotion) return;
 
     setPhase('database');
   }, [reduceMotion]);
@@ -31,9 +29,7 @@ export function HeroStage() {
    * to the code sequence.
    */
   useEffect(() => {
-    if (reduceMotion || phase !== 'database') {
-      return;
-    }
+    if (reduceMotion || phase !== 'database') return;
 
     const timer = window.setTimeout(() => {
       setPhase('code');
@@ -45,34 +41,64 @@ export function HeroStage() {
   }, [phase, reduceMotion]);
 
   return (
-    <div className="relative w-full max-w-[620px]">
-      {/* AMBIENT LIGHT */}
+    <div className="workspace-stage-shell relative w-full max-w-[620px]">
+      {/* =====================================================
+          AMBIENT LIGHT
+          ===================================================== */}
 
-      <div className="glow-cyan pointer-events-none absolute left-1/2 top-1/2 -z-10 size-[68%] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-55" />
+      <div className="glow-cyan pointer-events-none absolute left-1/2 top-1/2 -z-20 size-[72%] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-50" />
 
-      {/* WORKSPACE */}
+      {/* =====================================================
+          CONTACT SHADOW
+          Gives the workspace physical weight.
+          ===================================================== */}
 
-      <div className="workspace-window rounded-[1.4rem]">
-        {/* ===============================================
+      <div
+        aria-hidden="true"
+        className="workspace-contact-shadow pointer-events-none absolute left-1/2 top-[calc(100%-4px)] -z-10 -translate-x-1/2"
+      />
+
+      {/* =====================================================
+          WORKSPACE
+          ===================================================== */}
+
+      <div className="workspace-window relative isolate rounded-[1.4rem]">
+        {/* TOP EDGE SHEEN */}
+
+        <div
+          aria-hidden="true"
+          className="workspace-top-sheen pointer-events-none absolute inset-x-8 top-0 z-40 h-px"
+        />
+
+        {/* SCREEN DEPTH OVERLAY */}
+
+        <div
+          aria-hidden="true"
+          className="workspace-screen-depth pointer-events-none absolute inset-0 z-40 rounded-[inherit]"
+        />
+
+        {/* ===================================================
             WORKSPACE HEADER
-            =============================================== */}
+            =================================================== */}
 
-        <div className="workspace-header flex h-[54px] items-center px-5 sm:px-6">
+        <div className="workspace-header relative z-20 flex h-[54px] items-center px-5 sm:px-6">
           {/* WINDOW CONTROLS */}
 
           <div aria-hidden="true" className="flex items-center gap-2">
             <span className="size-2.5 rounded-full bg-red-400/90" />
-
             <span className="size-2.5 rounded-full bg-amber-400/90" />
-
             <span className="size-2.5 rounded-full bg-emerald-400/90" />
           </div>
 
           {/* WORKSPACE TITLE */}
 
-          <span className="ml-6 text-xs font-semibold tracking-[-0.01em] text-[var(--workspace-muted)]">
-            dennis.workspace
-          </span>
+          <div className="ml-6 flex min-w-0 items-center gap-2">
+            <span aria-hidden="true" className="workspace-identity-dot size-1.5 shrink-0 rounded-full" />
+
+            <span className="truncate text-xs font-semibold tracking-[-0.01em] text-[var(--workspace-title)]">
+              dennis.workspace
+            </span>
+          </div>
 
           {/* STATE CONTROLS */}
 
@@ -87,11 +113,11 @@ export function HeroStage() {
           </div>
         </div>
 
-        {/* ===============================================
+        {/* ===================================================
             CONTINUOUS STAGE
-            =============================================== */}
+            =================================================== */}
 
-        <div className="relative h-[420px] overflow-hidden">
+        <div className="workspace-stage relative h-[420px] overflow-hidden">
           <AnimatePresence initial={false} mode="sync">
             {phase === 'code' ? (
               <motion.div
@@ -150,6 +176,24 @@ export function HeroStage() {
             )}
           </AnimatePresence>
         </div>
+
+        {/* LOWER INNER REFLECTION */}
+
+        <div
+          aria-hidden="true"
+          className="workspace-inner-reflection pointer-events-none absolute inset-x-[8%] bottom-0 z-30 h-14"
+        />
+      </div>
+
+      {/* =====================================================
+          SURFACE REFLECTION
+          Sits outside the workspace.
+          ===================================================== */}
+
+      <div
+        aria-hidden="true"
+        className="workspace-surface-reflection pointer-events-none absolute left-1/2 top-[calc(100%+8px)] -z-10 -translate-x-1/2">
+        <div className="workspace-surface-reflection__core" />
       </div>
     </div>
   );
@@ -170,7 +214,6 @@ function StageControl({ active, label, onClick }: { active: boolean; label: stri
       <motion.span
         animate={{
           width: active ? 24 : 7,
-
           opacity: active ? 1 : 0.32
         }}
         transition={{

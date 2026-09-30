@@ -31,28 +31,24 @@ export function Hero() {
             </div>
 
             {/* =================================================
-                NAME
-                Mobile:
-                Dennis O.
-                Jones
-
-                Desktop:
-                Dennis O. Jones
+                GREETING
                 ================================================= */}
 
-            {/* NAME */}
+            {/* =================================================
+            GREETING + NAME
+            ================================================= */}
 
-            <h1 className="mt-6 font-heading font-extrabold sm:mt-5">
-              <span className="flex flex-col items-start sm:flex-row sm:items-center sm:space-x-2 lg:whitespace-nowrap">
-                <span className="text-[3.35rem] sm:text-[4rem] md:text-[4.35rem] lg:text-[4.8rem] xl:text-[5.2rem]">
-                  Dennis O.
-                </span>
+            <div>
+              <p className="gradient-text inline-flex translate-y-5 lg:translate-y-8 items-center text-[2.65rem] font-heading font-extrabold sm:text-[2.35rem] md:text-[3.8rem] lg:text-[3.65rem] xl:text-[4rem]">
+                <span>Hello I&apos;m </span>
+              </p>
 
-                <span className="gradient-text -mt-5 pr-[0.04em] text-[3.35rem] sm:mt-0 sm:text-[4rem] md:text-[4.35rem] lg:text-[4.8rem] xl:text-[5.2rem]">
-                  Jones
-                </span>
-              </span>
-            </h1>
+              <h1 className="whitespace-nowrap font-heading text-[2.65rem] font-extrabold sm:text-[3.45rem] md:text-[3.8rem] lg:text-[4.25rem] xl:text-[4.55rem]">
+                <span>Dennis O. </span>
+
+                <span className="gradient-text pr-[0.04em]">Jones</span>
+              </h1>
+            </div>
 
             {/* =================================================
                 ROLE
@@ -72,21 +68,13 @@ export function Hero() {
               structure.
             </p>
 
-            {/* =================================================
-                ACTIONS
-                ================================================= */}
-
-            <div className="mt-8 flex w-full flex-col gap-3 sm:mt-9 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
-              <a href="#projects" className="gradient-outline-button w-full sm:w-auto">
-                <span className="gradient-outline-button__inner flex w-full justify-center sm:w-auto">
-                  View my work
-                </span>
+            <div className="mt-8 flex w-full flex-col gap-3 sm:mt-9 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+              <a href="#projects" className="hero-action hero-action--primary w-full sm:w-auto">
+                <span className="hero-action__inner">View my work</span>
               </a>
 
-              <a href="#ask-dennis" className="quiet-outline-button w-full sm:w-auto">
-                <span className="quiet-outline-button__inner flex w-full justify-center sm:w-auto">
-                  Ask Dennis AI
-                </span>
+              <a href="#denokclear" className="hero-action hero-action--secondary w-full sm:w-auto">
+                <span className="hero-action__inner">Ask Denok</span>
               </a>
             </div>
           </div>
