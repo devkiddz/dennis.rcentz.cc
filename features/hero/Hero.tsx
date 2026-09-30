@@ -1,10 +1,12 @@
+import { SectionButton } from '@/components/navigation/SectionButton';
+
 import { HeroEnvironment } from './HeroEnvironment';
 import { HeroProjectRotator } from './HeroProjectRotator';
 import { HeroStage } from './HeroStage';
 
 export function Hero() {
   return (
-    <section id="home" className="relative isolate min-h-screen overflow-hidden">
+    <section data-section="home" className="relative isolate min-h-screen overflow-hidden">
       <HeroEnvironment />
 
       <div className="relative z-10 mx-auto w-full max-w-[1480px] px-4 sm:px-7 lg:px-10">
@@ -31,16 +33,12 @@ export function Hero() {
             </div>
 
             {/* =================================================
-                GREETING
+                GREETING + NAME
                 ================================================= */}
 
-            {/* =================================================
-            GREETING + NAME
-            ================================================= */}
-
             <div>
-              <p className="gradient-text inline-flex translate-y-5 lg:translate-y-8 items-center text-[2.65rem] font-heading font-extrabold sm:text-[2.35rem] md:text-[3.8rem] lg:text-[3.65rem] xl:text-[4rem]">
-                <span>Hello I&apos;m </span>
+              <p className="gradient-text inline-flex translate-y-5 items-center text-[2.65rem] font-heading font-extrabold sm:text-[2.35rem] md:text-[3.8rem] lg:translate-y-8 lg:text-[3.65rem] xl:text-[4rem]">
+                <span>Hello I&apos;m</span>
               </p>
 
               <h1 className="whitespace-nowrap font-heading text-[2.65rem] font-extrabold sm:text-[3.45rem] md:text-[3.8rem] lg:text-[4.25rem] xl:text-[4.55rem]">
@@ -68,14 +66,18 @@ export function Hero() {
               structure.
             </p>
 
-            <div className="mt-8 flex w-full flex-col gap-3 sm:mt-9 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
-              <a href="#projects" className="hero-action hero-action--primary w-full sm:w-auto">
-                <span className="hero-action__inner">View my work</span>
-              </a>
+            {/* =================================================
+                ACTIONS
+                ================================================= */}
 
-              <a href="#denokclear" className="hero-action hero-action--secondary w-full sm:w-auto">
+            <div className="mt-8 flex w-full flex-col gap-3 sm:mt-9 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+              <SectionButton target="projects" className="hero-action hero-action--primary w-full sm:w-auto">
+                <span className="hero-action__inner">View my work</span>
+              </SectionButton>
+
+              <SectionButton target="denok" className="hero-action hero-action--secondary w-full sm:w-auto">
                 <span className="hero-action__inner">Ask Denok</span>
-              </a>
+              </SectionButton>
             </div>
           </div>
 

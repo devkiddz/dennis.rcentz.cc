@@ -15,37 +15,39 @@ import {
 
 import { useTheme } from 'next-themes';
 
-import { useState, useSyncExternalStore } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
+
+import { scrollToSection } from '@/lib/scrollToSection';
 
 const navItems = [
   {
     label: 'Home',
-    href: '#home',
+    target: 'home',
     icon: Home
   },
   {
     label: 'Skills',
-    href: '#skills',
+    target: 'skills',
     icon: Code2
   },
   {
     label: 'Experience',
-    href: '#experience',
+    target: 'experience',
     icon: BriefcaseBusiness
   },
   {
     label: 'Education',
-    href: '#education',
+    target: 'education',
     icon: GraduationCap
   },
   {
     label: 'Projects',
-    href: '#projects',
+    target: 'projects',
     icon: FolderKanban
   },
   {
     label: 'Ask Denok',
-    href: '#denok',
+    target: 'denok',
     icon: Bot
   }
 ] as const;
@@ -54,6 +56,8 @@ const subscribe = () => () => {};
 
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const [activeSection, setActiveSection] = useState<string>('home');
 
   const { resolvedTheme, setTheme } = useTheme();
 
@@ -69,6 +73,61 @@ export function SiteHeader() {
     setTheme(dark ? 'light' : 'dark');
   };
 
+  const handleNavigation = (target: string) => {
+    setActiveSection(target);
+
+    scrollToSection(target, {
+      duration: 900,
+      offset: 24
+    });
+
+    setMobileOpen(false);
+  };
+
+  /* =========================================================
+     ACTIVE SECTION TRACKING
+     Keeps navbar state in sync when scrolling manually.
+     ========================================================= */
+
+  useEffect(() => {
+    const sections = navItems
+      .map(item => document.querySelector<HTMLElement>(`[data-section="${item.target}"]`))
+      .filter((section): section is HTMLElement => section !== null);
+
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      entries => {
+        const visible = entries
+          .filter(entry => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        const current = visible[0];
+
+        if (!current) return;
+
+        const target = current.target.getAttribute('data-section');
+
+        if (target) {
+          setActiveSection(target);
+        }
+      },
+      {
+        root: null,
+        rootMargin: '-30% 0px -55% 0px',
+        threshold: [0, 0.1, 0.25, 0.5]
+      }
+    );
+
+    sections.forEach(section => {
+      observer.observe(section);
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   return (
     <header className="absolute inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6 sm:pt-5 lg:px-8">
       <div className="mx-auto w-full max-w-[1240px]">
@@ -79,16 +138,17 @@ export function SiteHeader() {
         <div className="hidden justify-center lg:flex">
           <div className="portfolio-nav-shell">
             <div className="portfolio-nav-inner gap-0.5 p-1">
-              {navItems.map(({ label, href, icon: Icon }, index) => (
-                <a
+              {navItems.map(({ label, target, icon: Icon }) => (
+                <button
                   key={label}
-                  href={href}
-                  data-active={index === 0 ? 'true' : undefined}
+                  type="button"
+                  onClick={() => handleNavigation(target)}
+                  data-active={activeSection === target ? 'true' : undefined}
                   className="nav-link h-8 px-3 text-[12px]">
                   <Icon size={14} strokeWidth={2} />
 
                   <span>{label}</span>
-                </a>
+                </button>
               ))}
 
               <div className="ml-1 border-l border-border/50 pl-2">
@@ -103,7 +163,11 @@ export function SiteHeader() {
             =================================================== */}
 
         <div className="flex w-full items-center justify-between lg:hidden">
-          <a href="#home" aria-label="Dennis O. Jones home" className="flex min-w-0 items-center gap-3">
+          <button
+            type="button"
+            onClick={() => handleNavigation('home')}
+            aria-label="Dennis O. Jones home"
+            className="flex min-w-0 items-center gap-3 text-left">
             <div className="portfolio-nav-shell shrink-0">
               <div className="portfolio-nav-inner flex size-10 items-center justify-center">
                 <span className="text-xs font-bold">DO</span>
@@ -117,7 +181,7 @@ export function SiteHeader() {
                 Frontend & Product Engineer
               </p>
             </div>
-          </a>
+          </button>
 
           <div className="ml-3 flex shrink-0 items-center gap-2">
             <ThemeSwitch isClient={isClient} dark={dark} onToggle={toggleTheme} />
@@ -141,19 +205,19 @@ export function SiteHeader() {
           <div className="mt-4 w-full lg:hidden">
             <nav className="mobile-nav-panel w-full">
               <div className="flex w-full flex-col space-y-1">
-                {navItems.map(({ label, href, icon: Icon }, index) => (
-                  <a
+                {navItems.map(({ label, target, icon: Icon }) => (
+                  <button
                     key={label}
-                    href={href}
-                    data-active={index === 0 ? 'true' : undefined}
-                    onClick={() => setMobileOpen(false)}
+                    type="button"
+                    onClick={() => handleNavigation(target)}
+                    data-active={activeSection === target ? 'true' : undefined}
                     className="nav-link min-h-11 w-full px-4">
                     <span className="mr-auto flex items-center space-x-3">
                       <Icon size={17} strokeWidth={2} className="shrink-0" />
 
                       <span>{label}</span>
                     </span>
-                  </a>
+                  </button>
                 ))}
               </div>
             </nav>

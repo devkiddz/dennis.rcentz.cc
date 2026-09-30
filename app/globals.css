@@ -153,6 +153,177 @@
   --nav-shadow: rgba(31, 76, 103, 0.075);
   --nav-glow: rgba(32, 182, 219, 0.06);
 
+  /* =========================================================
+   SKILLS SECTION
+   Capability map identity.
+   ========================================================= */
+
+  .skills-section {
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      color-mix(in srgb, var(--panel) 30%, transparent) 18%,
+      color-mix(in srgb, var(--panel) 58%, transparent) 52%,
+      color-mix(in srgb, var(--panel) 28%, transparent) 100%
+    );
+  }
+
+  .skills-section__grid {
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--grid-line) 70%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--grid-line) 70%, transparent) 1px, transparent 1px);
+
+    background-size: 56px 56px;
+
+    mask-image: linear-gradient(to bottom, transparent 0%, black 16%, black 84%, transparent 100%);
+
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 16%, black 84%, transparent 100%);
+  }
+
+  .skills-section__glow {
+    background: radial-gradient(ellipse at center, var(--soft-cyan) 0%, transparent 72%);
+
+    filter: blur(48px);
+
+    opacity: 0.62;
+  }
+
+  .skills-section__eyebrow {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 0.65rem;
+
+    color: var(--muted-foreground);
+
+    font-size: 0.6875rem;
+    font-weight: 700;
+
+    letter-spacing: 0.14em;
+
+    text-transform: uppercase;
+  }
+
+  .skills-section__number {
+    color: var(--brand-cyan);
+  }
+
+  .skills-section__divider {
+    width: 1.75rem;
+    height: 1px;
+
+    background: linear-gradient(90deg, var(--brand-teal), var(--brand-cyan));
+
+    opacity: 0.7;
+  }
+
+  /* =========================================================
+   SKILL CARDS
+   ========================================================= */
+
+  .skills-card {
+    min-height: 17rem;
+
+    border: 1px solid var(--border);
+
+    background: linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--card) 94%, transparent),
+      color-mix(in srgb, var(--panel) 78%, transparent)
+    );
+
+    box-shadow:
+      0 10px 28px rgba(0, 0, 0, 0.025),
+      inset 0 1px 0 rgba(255, 255, 255, 0.025);
+
+    transition:
+      transform 220ms ease,
+      border-color 220ms ease,
+      box-shadow 220ms ease;
+  }
+
+  .skills-card:hover {
+    transform: translateY(-2px);
+
+    border-color: color-mix(in srgb, var(--brand-cyan) 24%, var(--border));
+
+    box-shadow:
+      0 14px 34px rgba(0, 0, 0, 0.045),
+      inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  }
+
+  .skills-card--emphasis {
+    border-color: color-mix(in srgb, var(--brand-cyan) 20%, var(--border));
+  }
+
+  .skills-card--emphasis::before {
+    content: '';
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--brand-cyan) 5%, transparent),
+      transparent 42%
+    );
+  }
+
+  .skills-card__icon {
+    border: 1px solid var(--border);
+
+    background: color-mix(in srgb, var(--panel-strong) 88%, transparent);
+
+    color: var(--brand-cyan);
+
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  }
+
+  .skills-card__signal {
+    background: var(--brand-teal);
+
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--brand-teal) 8%, transparent),
+      0 0 12px color-mix(in srgb, var(--brand-teal) 18%, transparent);
+  }
+
+  /* =========================================================
+   SKILL CHIPS
+   ========================================================= */
+
+  .skills-chip {
+    display: inline-flex;
+
+    min-height: 1.85rem;
+
+    align-items: center;
+
+    border: 1px solid var(--border);
+    border-radius: 999px;
+
+    padding-inline: 0.7rem;
+
+    background: color-mix(in srgb, var(--panel) 72%, transparent);
+
+    color: var(--foreground);
+
+    font-size: 0.6875rem;
+    font-weight: 600;
+
+    transition:
+      border-color 180ms ease,
+      background-color 180ms ease,
+      color 180ms ease;
+  }
+
+  .skills-card:hover .skills-chip {
+    border-color: color-mix(in srgb, var(--brand-cyan) 16%, var(--border));
+  }
+
   /* Workspace */
 
   --workspace-background: #ffffff;
@@ -943,6 +1114,415 @@ video {
     background-color 300ms ease,
     border-color 300ms ease,
     box-shadow 300ms ease;
+}
+
+/* =========================================================
+   SKILLS SHOWCASE
+   Skills section identity.
+   ========================================================= */
+
+.skills-showcase {
+  background: linear-gradient(
+    180deg,
+    var(--background) 0%,
+    color-mix(in srgb, var(--panel) 42%, var(--background)) 32%,
+    color-mix(in srgb, var(--panel) 56%, var(--background)) 68%,
+    var(--background) 100%
+  );
+}
+
+.skills-showcase__grid {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--grid-line) 72%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--grid-line) 72%, transparent) 1px, transparent 1px);
+
+  background-size: 52px 52px;
+
+  mask-image: linear-gradient(to bottom, transparent, black 14%, black 86%, transparent);
+
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 14%, black 86%, transparent);
+}
+
+.skills-showcase__ambient {
+  width: min(58rem, 92vw);
+  height: 34rem;
+
+  transform: translateX(-50%);
+
+  border-radius: 999px;
+
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--brand-cyan) 10%, transparent),
+    color-mix(in srgb, var(--brand-teal) 4%, transparent) 40%,
+    transparent 72%
+  );
+
+  filter: blur(58px);
+}
+
+/* =========================================================
+   SECTION EYEBROW
+   ========================================================= */
+
+.skills-showcase__eyebrow {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 0.7rem;
+
+  color: var(--muted-foreground);
+
+  font-size: 0.6875rem;
+  font-weight: 700;
+
+  letter-spacing: 0.14em;
+
+  text-transform: uppercase;
+}
+
+.skills-showcase__eyebrow > span:first-child {
+  color: var(--brand-cyan);
+}
+
+.skills-showcase__eyebrow-line {
+  width: 2rem;
+  height: 1px;
+
+  background: linear-gradient(90deg, var(--brand-teal), var(--brand-cyan));
+
+  opacity: 0.72;
+}
+
+/* =========================================================
+   SKILLS HERO STAGE
+   ========================================================= */
+
+.skills-hero-stage {
+  border: 1px solid var(--border);
+
+  background: linear-gradient(
+    125deg,
+    color-mix(in srgb, var(--card) 96%, transparent) 0%,
+    color-mix(in srgb, var(--panel) 86%, transparent) 52%,
+    color-mix(in srgb, var(--panel-strong) 92%, transparent) 100%
+  );
+
+  box-shadow:
+    0 26px 70px rgba(0, 0, 0, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.skills-hero-stage__grid {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--grid-line) 75%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--grid-line) 75%, transparent) 1px, transparent 1px);
+
+  background-size: 42px 42px;
+
+  opacity: 0.72;
+}
+
+.skills-hero-stage__glow {
+  right: -4rem;
+  bottom: -10rem;
+
+  width: 42rem;
+  height: 42rem;
+
+  border-radius: 999px;
+
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--brand-teal) 14%, transparent),
+    color-mix(in srgb, var(--brand-cyan) 7%, transparent) 42%,
+    transparent 70%
+  );
+
+  filter: blur(46px);
+}
+
+/* =========================================================
+   STACK LABEL
+   ========================================================= */
+
+.skills-stack-label {
+  display: inline-flex;
+
+  width: fit-content;
+
+  align-items: center;
+
+  gap: 0.55rem;
+
+  border: 1px solid var(--hero-glass-border);
+  border-radius: 999px;
+
+  padding: 0.5rem 0.75rem;
+
+  background: var(--hero-glass-background);
+
+  color: var(--hero-eyebrow-text);
+
+  box-shadow: var(--hero-glass-shadow);
+
+  font-size: 0.6875rem;
+  font-weight: 700;
+
+  letter-spacing: 0.1em;
+
+  text-transform: uppercase;
+
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+/* =========================================================
+   HERO SKILL CHIPS
+   ========================================================= */
+
+.skills-hero-chip {
+  display: inline-flex;
+
+  min-height: 1.9rem;
+
+  align-items: center;
+
+  border: 1px solid var(--border);
+  border-radius: 999px;
+
+  padding-inline: 0.72rem;
+
+  background: color-mix(in srgb, var(--card) 72%, transparent);
+
+  color: var(--foreground);
+
+  font-size: 0.6875rem;
+  font-weight: 600;
+
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+/* =========================================================
+   PORTRAIT
+   ========================================================= */
+
+.skills-portrait {
+  isolation: isolate;
+}
+
+.skills-portrait__halo {
+  width: 26rem;
+  height: 26rem;
+
+  max-width: 84vw;
+
+  transform: translate(-50%, -45%);
+
+  border-radius: 999px;
+
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--brand-teal) 16%, transparent),
+    color-mix(in srgb, var(--brand-cyan) 7%, transparent) 45%,
+    transparent 72%
+  );
+
+  filter: blur(34px);
+}
+
+.skills-portrait__fade {
+  background: linear-gradient(to top, color-mix(in srgb, var(--panel-strong) 86%, transparent), transparent);
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   CAPABILITY CARDS
+   ========================================================= */
+
+.skills-capability-card {
+  position: relative;
+
+  min-height: 12.5rem;
+
+  overflow: hidden;
+
+  border: 1px solid var(--border);
+  border-radius: 1.2rem;
+
+  padding: 1.25rem;
+
+  background: color-mix(in srgb, var(--card) 91%, transparent);
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.045),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
+
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+
+  transition:
+    transform 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.skills-capability-card:hover {
+  transform: translateY(-2px);
+
+  border-color: color-mix(in srgb, var(--brand-cyan) 26%, var(--border));
+
+  box-shadow:
+    0 16px 36px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.skills-capability-card__icon {
+  display: flex;
+
+  width: 2.4rem;
+  height: 2.4rem;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--border);
+  border-radius: 0.8rem;
+
+  background: color-mix(in srgb, var(--panel-strong) 88%, transparent);
+
+  color: var(--brand-cyan);
+}
+
+/* =========================================================
+   MINI SKILL CHIPS
+   ========================================================= */
+
+.skills-mini-chip {
+  display: inline-flex;
+
+  min-height: 1.65rem;
+
+  align-items: center;
+
+  border: 1px solid var(--border);
+  border-radius: 999px;
+
+  padding-inline: 0.6rem;
+
+  background: color-mix(in srgb, var(--panel) 68%, transparent);
+
+  color: var(--muted-foreground);
+
+  font-size: 0.625rem;
+  font-weight: 600;
+
+  transition:
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+.skills-capability-card:hover .skills-mini-chip {
+  border-color: color-mix(in srgb, var(--brand-cyan) 18%, var(--border));
+
+  color: var(--foreground);
+}
+
+/* =========================================================
+   PROOF STRIP
+   ========================================================= */
+
+.skills-proof-strip {
+  overflow: hidden;
+
+  border: 1px solid var(--border);
+  border-radius: 1.2rem;
+
+  background: color-mix(in srgb, var(--card) 84%, transparent);
+
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.035);
+
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+.skills-proof-item {
+  display: flex;
+
+  min-height: 5.2rem;
+
+  align-items: center;
+
+  gap: 0.8rem;
+
+  padding: 1rem 1.25rem;
+}
+
+.skills-proof-item__signal {
+  width: 0.45rem;
+  height: 0.45rem;
+
+  flex: none;
+
+  border-radius: 999px;
+
+  background: var(--brand-teal);
+
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--brand-teal) 8%, transparent),
+    0 0 12px color-mix(in srgb, var(--brand-teal) 20%, transparent);
+}
+
+/* =========================================================
+   SKILLS MOBILE
+   ========================================================= */
+
+@media (max-width: 1023px) {
+  .skills-hero-stage {
+    border-radius: 1.5rem;
+  }
+
+  .skills-portrait {
+    min-height: 390px;
+  }
+}
+
+@media (max-width: 639px) {
+  .skills-showcase__ambient {
+    height: 24rem;
+
+    opacity: 0.72;
+  }
+
+  .skills-hero-stage {
+    border-radius: 1.3rem;
+  }
+
+  .skills-portrait {
+    min-height: 330px;
+  }
+
+  .skills-portrait__halo {
+    width: 20rem;
+    height: 20rem;
+  }
+
+  .skills-capability-card {
+    min-height: auto;
+
+    padding: 1.1rem;
+  }
+
+  .skills-proof-item {
+    min-height: 4.6rem;
+  }
+
+  .skills-proof-item:not(:last-child) {
+    border-bottom: 1px solid var(--border);
+  }
 }
 
 :root .workspace-window {
