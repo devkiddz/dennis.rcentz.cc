@@ -3,14 +3,13 @@
 import Prism from 'prismjs';
 import 'prismjs/components/prism-typescript';
 
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { useReducedMotion } from 'motion/react';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 
 const CODE_BLOCKS = [
   {
     file: 'dennis.ts',
-
     code: `const dennis = {
   role: 'Frontend & Product Engineer',
   builds: 'real product systems',
@@ -19,10 +18,8 @@ const CODE_BLOCKS = [
   mindset: 'Build. Harden. Improve.'
 }`
   },
-
   {
     file: 'product.ts',
-
     code: `const product = createSystem({
   experience: 'intentional',
   data: 'structured',
@@ -39,9 +36,10 @@ return product.launch()`
 const INITIAL_WAKE_DELAY = 700;
 const TYPE_STEP = 1;
 const TYPE_SPEED = 115;
-
 const FIRST_BLOCK_HOLD = 1100;
 const FINAL_BLOCK_HOLD = 1400;
+
+const subscribe = () => () => {};
 
 type CodeStageProps = {
   onComplete: () => void;
@@ -50,181 +48,119 @@ type CodeStageProps = {
 export function CodeStage({ onComplete }: CodeStageProps) {
   const reduceMotion = Boolean(useReducedMotion());
 
-  const [mounted, setMounted] = useState(false);
+  const isClient = useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false
+  );
 
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [blockIndex, setBlockIndex] = useState(0);
+  const [visibleLength, setVisibleLength] = useState(0);
+  const [started, setStarted] = useState(false);
 
-  const [typedLength, setTypedLength] = useState(0);
-
-  const [awake, setAwake] = useState(false);
-
-  const activeBlock = CODE_BLOCKS[activeIndex];
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const currentBlock = CODE_BLOCKS[blockIndex];
 
   useEffect(() => {
-    if (!mounted || reduceMotion) {
-      return;
-    }
+    if (!isClient || reduceMotion || started) return;
 
-    const timeout = window.setTimeout(() => {
-      setAwake(true);
+    const timer = window.setTimeout(() => {
+      setStarted(true);
     }, INITIAL_WAKE_DELAY);
 
     return () => {
-      window.clearTimeout(timeout);
+      window.clearTimeout(timer);
     };
-  }, [mounted, reduceMotion]);
+  }, [isClient, reduceMotion, started]);
 
   useEffect(() => {
-    if (!mounted || reduceMotion || !awake || typedLength >= activeBlock.code.length) {
-      return;
+    if (!isClient || !started || reduceMotion) return;
+
+    if (visibleLength < currentBlock.code.length) {
+      const timer = window.setTimeout(() => {
+        setVisibleLength(current => Math.min(current + TYPE_STEP, currentBlock.code.length));
+      }, TYPE_SPEED);
+
+      return () => {
+        window.clearTimeout(timer);
+      };
     }
 
-    const timeout = window.setTimeout(() => {
-      setTypedLength(current => Math.min(current + TYPE_STEP, activeBlock.code.length));
-    }, TYPE_SPEED);
+    if (blockIndex < CODE_BLOCKS.length - 1) {
+      const timer = window.setTimeout(() => {
+        setBlockIndex(current => current + 1);
+        setVisibleLength(0);
+      }, FIRST_BLOCK_HOLD);
 
-    return () => {
-      window.clearTimeout(timeout);
-    };
-  }, [activeBlock.code, awake, mounted, reduceMotion, typedLength]);
-
-  useEffect(() => {
-    if (!mounted || reduceMotion || !awake || activeIndex !== 0 || typedLength !== activeBlock.code.length) {
-      return;
+      return () => {
+        window.clearTimeout(timer);
+      };
     }
 
-    const timeout = window.setTimeout(() => {
-      setTypedLength(0);
-      setActiveIndex(1);
-    }, FIRST_BLOCK_HOLD);
-
-    return () => {
-      window.clearTimeout(timeout);
-    };
-  }, [activeBlock.code.length, activeIndex, awake, mounted, reduceMotion, typedLength]);
-
-  useEffect(() => {
-    if (
-      !mounted ||
-      reduceMotion ||
-      !awake ||
-      activeIndex !== CODE_BLOCKS.length - 1 ||
-      typedLength !== activeBlock.code.length
-    ) {
-      return;
-    }
-
-    const timeout = window.setTimeout(() => {
+    const timer = window.setTimeout(() => {
       onComplete();
     }, FINAL_BLOCK_HOLD);
 
     return () => {
-      window.clearTimeout(timeout);
+      window.clearTimeout(timer);
     };
-  }, [activeBlock.code.length, activeIndex, awake, mounted, onComplete, reduceMotion, typedLength]);
+  }, [blockIndex, currentBlock.code.length, isClient, onComplete, reduceMotion, started, visibleLength]);
 
-  const visibleLength = reduceMotion ? activeBlock.code.length : typedLength;
-
-  const typedCode = activeBlock.code.slice(0, visibleLength);
-
-  const highlightedCode = useMemo(() => {
-    if (!mounted) {
-      return '';
-    }
-
-    return Prism.highlight(typedCode, Prism.languages.typescript, 'typescript');
-  }, [mounted, typedCode]);
-
-  /*
-   * Important:
-   * server and first client render are
-   * intentionally identical.
-   *
-   * Prism only enters after hydration.
-   */
-  if (!mounted) {
+  if (!isClient) {
     return <div className="relative h-full" />;
   }
 
+  const codeToRender = reduceMotion ? currentBlock.code : currentBlock.code.slice(0, visibleLength);
+
+  const highlightedCode = Prism.highlight(codeToRender, Prism.languages.typescript, 'typescript');
+
+  const isTyping = !reduceMotion && started && visibleLength < currentBlock.code.length;
+
   return (
-    <div className="relative h-full">
-      <AnimatePresence initial={false} mode="wait">
-        <motion.div
-          key={activeIndex}
-          initial={
-            reduceMotion
-              ? false
-              : {
-                  opacity: 0,
-                  y: 8
-                }
-          }
-          animate={{
-            opacity: 1,
-            y: 0
-          }}
-          exit={
-            reduceMotion
-              ? undefined
-              : {
-                  opacity: 0,
-                  y: -6
-                }
-          }
-          transition={{
-            duration: 0.3,
-            ease: [0.22, 1, 0.36, 1]
-          }}
-          className="absolute inset-0 p-8 sm:p-10">
-          <div className="mb-6 flex items-center justify-between">
-            <span className="font-[family-name:var(--font-jetbrains-mono)] text-[10px] text-[var(--workspace-muted)]">
-              {activeBlock.file}
-            </span>
+    <div className="relative flex h-full flex-col">
+      {/* FILE BAR */}
 
-            <span className="font-[family-name:var(--font-jetbrains-mono)] text-[8px] uppercase tracking-[0.14em] text-[var(--workspace-faint)]">
-              {String(activeIndex + 1).padStart(2, '0')}/{String(CODE_BLOCKS.length).padStart(2, '0')}
-            </span>
-          </div>
+      <div className="flex min-h-11 items-center border-b border-[var(--workspace-divider)] px-6 sm:px-7">
+        <div className="flex items-center space-x-2">
+          <span aria-hidden="true" className="size-1.5 rounded-full bg-brand-teal" />
 
-          <pre
-            className={[
-              'whitespace-pre-wrap',
-              'font-[family-name:var(--font-jetbrains-mono)]',
-              'text-[14px]',
-              'leading-[2]',
-              'tracking-[-0.015em]',
-              'text-[var(--workspace-text)]',
-              'sm:text-[15px]'
-            ].join(' ')}>
-            <code className="language-typescript">
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: highlightedCode
-                }}
-              />
+          <span className="text-[12px] font-semibold text-[var(--workspace-muted)]">{currentBlock.file}</span>
+        </div>
 
-              {!reduceMotion && awake && typedLength < activeBlock.code.length ? (
-                <motion.span
-                  aria-hidden="true"
-                  animate={{
-                    opacity: [1, 0.15, 1]
-                  }}
-                  transition={{
-                    duration: 1,
-                    repeat: Infinity,
-                    ease: 'easeInOut'
-                  }}
-                  className="ml-0.5 inline-block h-[1em] w-[2px] translate-y-[2px] bg-brand-teal"
-                />
-              ) : null}
-            </code>
-          </pre>
-        </motion.div>
-      </AnimatePresence>
+        <div className="ml-auto flex items-center space-x-2">
+          <span className="text-[11px] font-medium text-[var(--workspace-faint)]">TypeScript</span>
+
+          <span aria-hidden="true" className="h-3 w-px bg-[var(--workspace-divider)]" />
+
+          <span className="text-[11px] font-medium text-[var(--workspace-faint)]">
+            {isTyping ? 'writing' : 'ready'}
+          </span>
+        </div>
+      </div>
+
+      {/* CODE */}
+
+      <div className="relative flex-1 overflow-hidden px-6 py-6 sm:px-8 sm:py-7">
+        <div
+          aria-hidden="true"
+          className="glow-cyan pointer-events-none absolute -right-20 top-1/2 size-48 -translate-y-1/2 rounded-full opacity-30"
+        />
+
+        <pre className="language-typescript relative z-10">
+          <code
+            className="language-typescript"
+            dangerouslySetInnerHTML={{
+              __html: highlightedCode
+            }}
+          />
+
+          {isTyping ? (
+            <span
+              aria-hidden="true"
+              className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[0.12em] animate-pulse bg-brand-cyan"
+            />
+          ) : null}
+        </pre>
+      </div>
     </div>
   );
 }

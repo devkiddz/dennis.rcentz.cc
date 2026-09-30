@@ -36,9 +36,7 @@ function useCyclingIndex(count: number, duration: number, paused = false) {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    if (paused || count <= 1) {
-      return;
-    }
+    if (paused || count <= 1) return;
 
     const timer = window.setTimeout(() => {
       setIndex(current => (current + 1) % count);
@@ -63,62 +61,77 @@ export function DatabaseStage() {
 
   return (
     <div className="relative flex h-full flex-col overflow-hidden px-5 pb-4 pt-5 sm:px-7">
-      {/* HEADER */}
+      {/* =====================================================
+          HEADER
+          ===================================================== */}
 
       <div className="relative z-30 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <Database className="size-[18px] text-brand-cyan" />
+          <Database className="size-[17px] text-brand-cyan" />
 
-          <span className="font-[family-name:var(--font-jetbrains-mono)] text-xs font-semibold uppercase tracking-[0.14em] text-[var(--workspace-text)]">
+          <span className="text-[12px] font-semibold uppercase tracking-[0.08em] text-[var(--workspace-text)]">
             Data engine
           </span>
         </div>
 
-        <div className="flex items-center gap-2.5">
-          <span className="relative flex size-2.5">
-            <span className="absolute inset-0 animate-ping rounded-full bg-brand-green opacity-25" />
+        <div className="flex items-center gap-2">
+          <span className="relative flex size-2">
+            <span className="absolute inset-0 animate-ping rounded-full bg-status-success opacity-20" />
 
-            <span className="relative size-2.5 rounded-full bg-brand-green" />
+            <span className="relative size-2 rounded-full bg-status-success" />
           </span>
 
-          <span className="font-[family-name:var(--font-jetbrains-mono)] text-[11px] font-medium uppercase tracking-[0.12em] text-[var(--workspace-muted)]">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--workspace-muted)]">
             Live
           </span>
         </div>
       </div>
 
-      {/* MAIN VISUAL */}
+      {/* =====================================================
+          MAIN VISUAL
+          ===================================================== */}
 
       <div className="relative flex min-h-0 flex-1 items-center justify-center">
         <div className="relative aspect-[16/9] w-full max-w-2xl">
           {/* TECHNOLOGY */}
 
           <div className="absolute left-1/2 top-[1%] z-30 -translate-x-1/2">
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="wait" initial={false}>
               <motion.p
                 key={technologies[technologyIndex]}
-                initial={{
-                  opacity: 0,
-                  y: 4
-                }}
+                initial={
+                  reduceMotion
+                    ? false
+                    : {
+                        opacity: 0,
+                        y: 4
+                      }
+                }
                 animate={{
                   opacity: 1,
                   y: 0
                 }}
-                exit={{
-                  opacity: 0,
-                  y: -4
-                }}
+                exit={
+                  reduceMotion
+                    ? undefined
+                    : {
+                        opacity: 0,
+                        y: -4
+                      }
+                }
                 transition={{
-                  duration: 0.3
+                  duration: 0.28,
+                  ease: 'easeOut'
                 }}
-                className="whitespace-nowrap font-[family-name:var(--font-jetbrains-mono)] text-[13px] font-semibold uppercase tracking-[0.16em] text-brand-cyan">
+                className="whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.1em] text-brand-cyan">
                 {technologies[technologyIndex]}
               </motion.p>
             </AnimatePresence>
           </div>
 
-          {/* CONNECTION PATHS */}
+          {/* =================================================
+              CONNECTION PATHS
+              ================================================= */}
 
           <svg
             aria-hidden="true"
@@ -152,25 +165,26 @@ export function DatabaseStage() {
             )}
           </svg>
 
-          {/* USER */}
+          {/* =================================================
+              SCHEMA NODES
+              ================================================= */}
 
           <div className="absolute left-[1%] top-[31%] z-30">
             <SchemaNode label="User" meta="Identity" active={record.model === 'User'} accent="blue" />
           </div>
 
-          {/* PROJECT */}
-
           <div className="absolute right-[1%] top-[21%] z-30">
             <SchemaNode label="Project" meta="Workflow" active={record.model === 'Project'} accent="teal" />
           </div>
-
-          {/* ACTIVITY */}
 
           <div className="absolute right-[2%] top-[61%] z-30">
             <SchemaNode label="Activity" meta="Events" active={record.model === 'Activity'} accent="green" />
           </div>
 
-          {/* DATABASE */}
+          {/* =================================================
+              DATABASE
+              Keep approved scale/composition.
+              ================================================= */}
 
           <div className="absolute left-1/2 top-[53%] z-20 w-[44%] min-w-52 max-w-72 -translate-x-1/2 -translate-y-1/2">
             <DatabaseVisual reduceMotion={reduceMotion} />
@@ -178,7 +192,9 @@ export function DatabaseStage() {
         </div>
       </div>
 
-      {/* BOTTOM FLOW */}
+      {/* =====================================================
+          BOTTOM FLOW
+          ===================================================== */}
 
       <div className="relative z-30 mx-auto w-full max-w-3xl">
         <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,0.78fr)] items-center gap-3">
@@ -194,7 +210,7 @@ export function DatabaseStage() {
 }
 
 /* =========================================================
-   DATABASE
+   DATABASE VISUAL
    ========================================================= */
 
 function DatabaseVisual({ reduceMotion }: { reduceMotion: boolean }) {
@@ -222,7 +238,7 @@ function DatabaseVisual({ reduceMotion }: { reduceMotion: boolean }) {
           ===================================================== */}
 
       <div className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[52%] w-[128%] -translate-x-1/2 -translate-y-1/2">
-        {/* BACK HALF OF RING */}
+        {/* BACK ORBIT */}
 
         <div
           className={[
@@ -233,7 +249,7 @@ function DatabaseVisual({ reduceMotion }: { reduceMotion: boolean }) {
           ].join(' ')}
         />
 
-        {/* MOVING ORBIT TRACK */}
+        {/* PRIMARY MOVING ORBIT */}
 
         <motion.div
           animate={
@@ -260,14 +276,12 @@ function DatabaseVisual({ reduceMotion }: { reduceMotion: boolean }) {
             ].join(' ')}
           />
 
-          {/* ORBIT NODE */}
-
           <div className="absolute left-1/2 top-0 -translate-x-1/2">
             <span className="block size-2.5 rounded-full bg-brand-cyan shadow-[0_0_1rem_var(--brand-cyan)]" />
           </div>
         </motion.div>
 
-        {/* SECOND SMALLER ORBIT */}
+        {/* SECONDARY ORBIT */}
 
         <motion.div
           animate={
@@ -298,22 +312,23 @@ function DatabaseVisual({ reduceMotion }: { reduceMotion: boolean }) {
         </motion.div>
       </div>
 
-      {/* =====================================================
-          DATABASE IMAGE
-          ===================================================== */}
-
-      <Image
-        src="/illustrations/database-server.png"
-        alt="Database server"
-        fill
-        priority
-        sizes="288px"
-        className="relative z-10 object-contain"
-      />
+      <div
+        className="protected-asset absolute inset-0 z-10"
+        onContextMenu={event => event.preventDefault()}
+        onDragStart={event => event.preventDefault()}>
+        <Image
+          src="/illustrations/database-server.png"
+          alt="Database server"
+          fill
+          priority
+          draggable={false}
+          sizes="288px"
+          className="protected-asset pointer-events-none object-contain"
+        />
+      </div>
 
       {/* =====================================================
           FRONT ORBIT ARC
-          Gives the illusion that the ring passes in front
           ===================================================== */}
 
       <motion.div
@@ -357,14 +372,14 @@ function DatabaseVisual({ reduceMotion }: { reduceMotion: boolean }) {
 
 function MutationCard({ command }: { command: string }) {
   return (
-    <div className="min-w-0 rounded-2xl border border-brand-cyan/30 bg-[var(--workspace-surface-strong)] px-5 py-4 backdrop-blur-xl">
-      <div className="flex items-start justify-between gap-4">
+    <div className="min-w-0 rounded-2xl border border-brand-cyan/25 bg-[var(--workspace-surface-strong)] px-4 py-3.5 backdrop-blur-xl sm:px-5">
+      <div className="flex items-center justify-between gap-4">
         <div className="min-w-0">
-          <p className="font-[family-name:var(--font-jetbrains-mono)] text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--workspace-muted)]">
+          <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--workspace-muted)]">
             Mutation stream
           </p>
 
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" initial={false}>
             <motion.p
               key={command}
               initial={{
@@ -380,15 +395,16 @@ function MutationCard({ command }: { command: string }) {
                 y: -3
               }}
               transition={{
-                duration: 0.25
+                duration: 0.24,
+                ease: 'easeOut'
               }}
-              className="mt-2 truncate font-[family-name:var(--font-jetbrains-mono)] text-xs font-semibold text-brand-cyan">
+              className="mt-1.5 truncate text-[12px] font-semibold text-brand-cyan">
               {command}
             </motion.p>
           </AnimatePresence>
         </div>
 
-        <Activity className="mt-0.5 size-[18px] shrink-0 text-brand-teal" />
+        <Activity className="size-[17px] shrink-0 text-brand-teal" />
       </div>
     </div>
   );
@@ -404,17 +420,17 @@ function Pipeline({ reduceMotion }: { reduceMotion: boolean }) {
       {pipeline.map((step, index) => (
         <div key={step} className="flex items-center">
           <div className="flex flex-col items-center gap-1.5">
-            <span className="flex size-7 items-center justify-center rounded-full border border-brand-teal/40 bg-brand-teal/10">
+            <span className="flex size-7 items-center justify-center rounded-full border border-brand-teal/35 bg-brand-teal/10">
               <CheckCircle2 className="size-3.5 text-brand-teal" />
             </span>
 
-            <span className="font-[family-name:var(--font-jetbrains-mono)] text-[9px] font-semibold uppercase tracking-[0.055em] text-[var(--workspace-text)]">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.04em] text-[var(--workspace-muted)]">
               {step}
             </span>
           </div>
 
           {index < pipeline.length - 1 ? (
-            <div className="relative mb-5 w-8 overflow-hidden border-t border-[var(--workspace-divider)]">
+            <div className="relative mb-5 w-7 overflow-hidden border-t border-[var(--workspace-divider)] sm:w-8">
               <motion.span
                 animate={
                   reduceMotion
@@ -445,19 +461,17 @@ function Pipeline({ reduceMotion }: { reduceMotion: boolean }) {
 
 function StatusCard() {
   return (
-    <div className="min-w-0 rounded-2xl border border-brand-green/30 bg-[var(--workspace-surface-strong)] px-5 py-4 backdrop-blur-xl">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="font-[family-name:var(--font-jetbrains-mono)] text-[10px] font-semibold uppercase tracking-[0.11em] text-[var(--workspace-muted)]">
+    <div className="min-w-0 rounded-2xl border border-status-success/25 bg-[var(--workspace-surface-strong)] px-4 py-3.5 backdrop-blur-xl sm:px-5">
+      <div className="flex items-center justify-between gap-4">
+        <div className="min-w-0">
+          <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--workspace-muted)]">
             Relational system
           </p>
 
-          <p className="mt-2 font-[family-name:var(--font-jetbrains-mono)] text-xs font-semibold uppercase tracking-[0.08em] text-brand-green">
-            Persisted
-          </p>
+          <p className="mt-1.5 text-[12px] font-semibold text-status-success">Persisted</p>
         </div>
 
-        <Layers3 className="mt-0.5 size-[18px] shrink-0 text-brand-cyan" />
+        <Layers3 className="size-[17px] shrink-0 text-brand-cyan" />
       </div>
     </div>
   );
@@ -479,54 +493,49 @@ function SchemaNode({
   accent: SchemaAccent;
 }) {
   const activeStyles: Record<SchemaAccent, string> = {
-    blue: 'border-brand-blue/55 bg-brand-blue/12',
+    blue: 'border-brand-blue/45 bg-brand-blue/10',
 
-    teal: 'border-brand-teal/55 bg-brand-teal/12',
+    teal: 'border-brand-teal/45 bg-brand-teal/10',
 
-    green: 'border-brand-green/50 bg-brand-green/12'
+    green: 'border-brand-green/45 bg-brand-green/10'
   };
 
   const iconStyles: Record<SchemaAccent, string> = {
     blue: 'text-brand-blue',
-
     teal: 'text-brand-teal',
-
     green: 'text-brand-green'
   };
 
   return (
     <motion.div
       animate={{
-        opacity: active ? 1 : 0.76,
-
-        scale: active ? 1.035 : 1
+        opacity: active ? 1 : 0.72,
+        scale: active ? 1.025 : 1
       }}
       transition={{
-        duration: 0.3
+        duration: 0.3,
+        ease: 'easeOut'
       }}
       className={[
         'min-w-28',
         'rounded-2xl',
         'border',
         'px-4',
-        'py-3.5',
+        'py-3',
         'backdrop-blur-xl',
-
-        active ? activeStyles[accent] : 'border-brand-cyan/20 bg-[var(--workspace-node)]'
+        active ? activeStyles[accent] : 'border-[var(--workspace-divider)] bg-[var(--workspace-node)]'
       ].join(' ')}>
       <div className="flex items-center gap-2.5">
         <GitBranch
-          className={['size-4', active ? iconStyles[accent] : 'text-[var(--workspace-muted)]'].join(' ')}
+          className={['size-4 shrink-0', active ? iconStyles[accent] : 'text-[var(--workspace-muted)]'].join(
+            ' '
+          )}
         />
 
-        <span className="font-[family-name:var(--font-jetbrains-mono)] text-xs font-semibold text-[var(--workspace-text)]">
-          {label}
-        </span>
+        <span className="text-[12px] font-semibold text-[var(--workspace-text)]">{label}</span>
       </div>
 
-      <p className="mt-1.5 font-[family-name:var(--font-jetbrains-mono)] text-[10px] font-medium uppercase tracking-[0.09em] text-[var(--workspace-muted)]">
-        {meta}
-      </p>
+      <p className="mt-1.5 text-[11px] font-medium text-[var(--workspace-muted)]">{meta}</p>
     </motion.div>
   );
 }

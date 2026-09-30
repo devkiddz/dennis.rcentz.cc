@@ -1,19 +1,8 @@
 import type { Metadata } from 'next';
-import { Geist, JetBrains_Mono } from 'next/font/google';
 
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 
 import './globals.css';
-
-const geist = Geist({
-  subsets: ['latin'],
-  variable: '--font-geist'
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-jetbrains-mono'
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://dennis.rcentz.cc'),
@@ -42,8 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geist.variable} ${jetbrainsMono.variable} bg-background text-foreground antialiased`}>
+      <body className="bg-background font-sans text-foreground antialiased">
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

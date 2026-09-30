@@ -1,8 +1,21 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import {
+  Bot,
+  BriefcaseBusiness,
+  Code2,
+  FolderKanban,
+  GraduationCap,
+  Home,
+  Menu,
+  Moon,
+  Sun,
+  X
+} from 'lucide-react';
+
 import { useTheme } from 'next-themes';
-import { Bot, BriefcaseBusiness, FolderKanban, Home, Menu, Moon, Sun, X } from 'lucide-react';
+
+import { useState, useSyncExternalStore } from 'react';
 
 const navItems = [
   {
@@ -11,9 +24,9 @@ const navItems = [
     icon: Home
   },
   {
-    label: 'Projects',
-    href: '#projects',
-    icon: FolderKanban
+    label: 'Skills',
+    href: '#skills',
+    icon: Code2
   },
   {
     label: 'Experience',
@@ -21,86 +34,188 @@ const navItems = [
     icon: BriefcaseBusiness
   },
   {
+    label: 'Education',
+    href: '#education',
+    icon: GraduationCap
+  },
+  {
+    label: 'Projects',
+    href: '#projects',
+    icon: FolderKanban
+  },
+  {
     label: 'Ask Dennis',
     href: '#ask-dennis',
     icon: Bot
   }
-];
+] as const;
+
+const subscribe = () => () => {};
 
 export function SiteHeader() {
-  const [mounted, setMounted] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const { resolvedTheme, setTheme } = useTheme();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const isClient = useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false
+  );
 
   const dark = resolvedTheme === 'dark';
 
+  const toggleTheme = () => {
+    setTheme(dark ? 'light' : 'dark');
+  };
+
   return (
-    <header className="absolute inset-x-0 top-0 z-50 px-4 pt-5 sm:px-6 lg:px-8">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-        <a href="#home" className="group flex items-center gap-3" aria-label="Dennis O. Jones home">
-          <div className="flex size-10 items-center justify-center rounded-xl border border-border bg-panel/80 text-sm font-bold backdrop-blur-md">
-            DO
+    <header className="absolute inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6 sm:pt-5 lg:px-8">
+      <div className="mx-auto w-full max-w-[1240px]">
+        {/* ===================================================
+            DESKTOP
+            =================================================== */}
+
+        <div className="hidden justify-center lg:flex">
+          <div className="portfolio-nav-shell">
+            <div className="portfolio-nav-inner gap-1 p-2">
+              {navItems.map(({ label, href, icon: Icon }, index) => (
+                <a
+                  key={label}
+                  href={href}
+                  data-active={index === 0 ? 'true' : undefined}
+                  className="nav-link h-10 px-4">
+                  <Icon size={17} strokeWidth={2} />
+
+                  <span>{label}</span>
+                </a>
+              ))}
+
+              <div className="ml-2 border-l border-border/60 pl-3">
+                <ThemeSwitch isClient={isClient} dark={dark} onToggle={toggleTheme} />
+              </div>
+            </div>
           </div>
-
-          <div className="hidden sm:block">
-            <p className="text-sm font-semibold leading-none">Dennis O. Jones</p>
-
-            <p className="mt-1 text-xs text-muted-foreground">Product Engineer</p>
-          </div>
-        </a>
-
-        <nav className="glass-panel hidden items-center gap-1 rounded-full px-2 py-2 lg:flex">
-          {navItems.map(({ label, href, icon: Icon }, index) => (
-            <a
-              key={label}
-              href={href}
-              data-active={index === 0 ? 'true' : undefined}
-              className="nav-link flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium">
-              <Icon size={15} strokeWidth={1.8} />
-              {label}
-            </a>
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setTheme(dark ? 'light' : 'dark')}
-            className="glass-panel flex size-10 items-center justify-center rounded-full transition hover:border-brand-cyan/40"
-            aria-label="Toggle colour theme">
-            {mounted ? dark ? <Sun size={17} /> : <Moon size={17} /> : <span className="size-4" />}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setMobileOpen(value => !value)}
-            className="glass-panel flex size-10 items-center justify-center rounded-full lg:hidden"
-            aria-label="Toggle navigation"
-            aria-expanded={mobileOpen}>
-            {mobileOpen ? <X size={18} /> : <Menu size={18} />}
-          </button>
         </div>
-      </div>
 
-      {mobileOpen && (
-        <nav className="glass-panel mx-auto mt-3 grid max-w-md gap-1 rounded-2xl p-2 lg:hidden">
-          {navItems.map(({ label, href, icon: Icon }) => (
-            <a
-              key={label}
-              href={href}
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-muted-foreground transition hover:bg-secondary hover:text-foreground">
-              <Icon size={16} />
-              {label}
-            </a>
-          ))}
-        </nav>
-      )}
+        {/* ===================================================
+            MOBILE / TABLET
+            =================================================== */}
+
+        <div className="flex w-full items-center justify-between lg:hidden">
+          <a href="#home" aria-label="Dennis O. Jones home" className="flex min-w-0 items-center gap-3">
+            <div className="portfolio-nav-shell shrink-0">
+              <div className="portfolio-nav-inner flex size-10 items-center justify-center">
+                <span className="text-xs font-bold">DO</span>
+              </div>
+            </div>
+
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold">Dennis O. Jones</p>
+
+              <p className="mt-0.5 truncate text-[11px] text-muted-foreground sm:text-xs">
+                Frontend & Product Engineer
+              </p>
+            </div>
+          </a>
+
+          <div className="ml-3 flex shrink-0 items-center gap-2">
+            <ThemeSwitch isClient={isClient} dark={dark} onToggle={toggleTheme} />
+
+            <button
+              type="button"
+              onClick={() => setMobileOpen(value => !value)}
+              aria-label={mobileOpen ? 'Close navigation' : 'Open navigation'}
+              aria-expanded={mobileOpen}
+              className="glass-panel flex size-10 shrink-0 items-center justify-center rounded-full">
+              {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+            </button>
+          </div>
+        </div>
+
+        {/* ===================================================
+            MOBILE MENU
+            =================================================== */}
+
+        {mobileOpen ? (
+          <div className="mt-4 w-full lg:hidden">
+            <nav className="w-full border-y border-border/60 bg-[var(--nav-background)] p-4 backdrop-blur-[22px]">
+              <div className="flex w-full flex-col space-y-1">
+                {navItems.map(({ label, href, icon: Icon }, index) => (
+                  <a
+                    key={label}
+                    href={href}
+                    data-active={index === 0 ? 'true' : undefined}
+                    onClick={() => setMobileOpen(false)}
+                    className="nav-link min-h-12 w-full px-5">
+                    <span className="mr-auto flex items-center space-x-3">
+                      <Icon size={18} strokeWidth={2} className="shrink-0" />
+
+                      <span>{label}</span>
+                    </span>
+                  </a>
+                ))}
+              </div>
+            </nav>
+          </div>
+        ) : null}
+      </div>
     </header>
+  );
+}
+
+/* =========================================================
+   THEME SWITCH
+   ========================================================= */
+
+function ThemeSwitch({
+  isClient,
+  dark,
+  onToggle
+}: {
+  isClient: boolean;
+  dark: boolean;
+  onToggle: () => void;
+}) {
+  if (!isClient) {
+    return (
+      <div
+        aria-hidden="true"
+        className="relative h-9 w-[68px] shrink-0 rounded-full border border-border/70 bg-background/55 p-1">
+        <span className="absolute left-1 top-1 size-7 rounded-full border border-border/80 bg-card" />
+      </div>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-label={dark ? 'Switch to light theme' : 'Switch to dark theme'}
+      aria-pressed={dark}
+      className="group relative flex h-9 w-[68px] shrink-0 items-center rounded-full border border-border/70 bg-background/55 p-1 shadow-inner backdrop-blur-xl transition hover:border-brand-cyan/50">
+      <span
+        className={[
+          'absolute left-2 z-10 flex size-5 items-center justify-center transition-colors',
+          dark ? 'text-[var(--workspace-faint)]' : 'text-brand-gold'
+        ].join(' ')}>
+        <Sun size={13} strokeWidth={2.2} />
+      </span>
+
+      <span
+        className={[
+          'absolute right-2 z-10 flex size-5 items-center justify-center transition-colors',
+          dark ? 'text-brand-cyan' : 'text-[var(--workspace-faint)]'
+        ].join(' ')}>
+        <Moon size={13} strokeWidth={2.2} />
+      </span>
+
+      <span
+        className={[
+          'absolute left-1 top-1 size-7 rounded-full border border-border/80 bg-card transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
+          dark ? 'translate-x-8' : 'translate-x-0'
+        ].join(' ')}
+      />
+    </button>
   );
 }
