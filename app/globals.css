@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&display=swap');
 
 @import 'tailwindcss';
 
@@ -268,7 +268,6 @@
 
   --workspace-background: #f8fbfd;
   --workspace-header: #edf5f9;
-  --workspace-footer: #f2f7fa;
 
   --workspace-border: rgba(25, 112, 134, 0.2);
   --workspace-divider: rgba(32, 74, 96, 0.1);
@@ -408,7 +407,6 @@
 
   --workspace-background: #081a2b;
   --workspace-header: #0f3148;
-  --workspace-footer: #081a2b;
 
   --workspace-border: rgba(74, 202, 219, 0.28);
   --workspace-divider: rgba(181, 220, 241, 0.12);
@@ -856,12 +854,6 @@ video {
     border-color 300ms ease;
 }
 
-.workspace-footer {
-  border-top: 1px solid var(--workspace-divider);
-
-  background: var(--workspace-footer);
-}
-
 .workspace-surface {
   border: 1px solid var(--workspace-divider);
 
@@ -1049,3 +1041,4 @@ pre[class*='language-'] {
 
   -webkit-touch-callout: none;
 }
+
