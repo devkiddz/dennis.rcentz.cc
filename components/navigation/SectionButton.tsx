@@ -15,7 +15,7 @@ export function SectionButton({ target, className, children }: SectionButtonProp
       onClick={() =>
         scrollToSection(target, {
           duration: 900,
-          offset: 24
+          offset: 104
         })
       }
       className={className}>

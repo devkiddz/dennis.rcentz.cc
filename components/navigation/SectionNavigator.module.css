@@ -1,0 +1,14 @@
+.markers { position: fixed; z-index: 40; right: .5rem; top: 50%; display: flex; flex-direction: column; transform: translateY(-50%); padding: .25rem; border: 1px solid var(--border); border-radius: 999px; background: var(--card); box-shadow: 0 8px 24px var(--nav-shadow); }
+.marker { position: relative; display: grid; place-items: center; width: 32px; height: 44px; cursor: pointer; border-radius: 999px; }
+.dot { width: 5px; height: 5px; border-radius: 999px; background: var(--muted-foreground); transition: height 180ms ease, background 180ms ease; }
+.marker[aria-current] .dot { height: 18px; background: var(--brand-teal); }
+.tooltip { position: absolute; right: calc(100% + .5rem); padding: .5rem .75rem; border: 1px solid var(--border); border-radius: .75rem; background: var(--card); color: var(--foreground); white-space: nowrap; font-size: var(--text-label); opacity: 0; pointer-events: none; }
+.marker:hover .tooltip, .marker:focus-visible .tooltip { opacity: 1; }
+ .top { position: fixed; z-index: 40; right: 1rem; bottom: max(1rem, env(safe-area-inset-bottom)); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .25rem; width: 44px; height: 72px; padding: .375rem; cursor: pointer; border: 1px solid color-mix(in srgb, var(--brand-teal) 35%, var(--border)); border-radius: 999px; background: linear-gradient(135deg, var(--panel-strong), var(--card)); color: var(--foreground); box-shadow: 0 8px 24px var(--nav-shadow); transition: transform 180ms ease, border-color 180ms ease; }
+.topIcon { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; color: var(--brand-teal); background: color-mix(in srgb, var(--brand-teal) 10%, transparent); }
+.topLabel { font-size: var(--text-label); font-weight: 700; }
+.top:hover { transform: translateY(-3px); border-color: var(--brand-teal); }
+.top:focus-visible, .marker:focus-visible { outline: 2px solid var(--brand-teal); outline-offset: 4px; }
+
+@media (max-width: 1279px) { .markers { top: auto; bottom: max(1rem, env(safe-area-inset-bottom)); left: 50%; right: auto; transform: translateX(-50%); flex-direction: row; } .marker { width: 44px; height: 44px; } .marker[aria-current] .dot { height: 5px; width: 18px; } .tooltip { bottom: calc(100% + .5rem); right: 50%; transform: translateX(50%); } }
+@media (prefers-reduced-motion: reduce) { .dot, .top { transition: none; } }

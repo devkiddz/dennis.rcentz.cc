@@ -1,3 +1,4 @@
+import { ScrollCue } from '@/components/navigation/ScrollCue';
 import { SectionButton } from '@/components/navigation/SectionButton';
 
 import { HeroEnvironment } from './HeroEnvironment';
@@ -10,7 +11,7 @@ export function Hero() {
       <HeroEnvironment />
 
       <div className="relative z-10 mx-auto w-full max-w-[1480px] px-4 sm:px-7 lg:px-10">
-        <div className="mx-auto grid min-h-screen w-full max-w-[1320px] items-center gap-10 pb-12 pt-24 sm:pt-28 lg:grid-cols-[1.04fr_0.96fr] lg:gap-8 lg:pb-0 lg:pt-24">
+        <div className="mx-auto grid min-h-screen w-full max-w-[1320px] items-center gap-10 pb-36 pt-24 sm:pt-28 lg:grid-cols-[1.04fr_0.96fr] lg:gap-8 lg:pb-36 lg:pt-24">
           {/* =================================================
               IDENTITY
               ================================================= */}
@@ -90,6 +91,7 @@ export function Hero() {
           </div>
         </div>
       </div>
+      <ScrollCue />
     </section>
   );
 }

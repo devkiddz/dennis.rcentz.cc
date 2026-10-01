@@ -1,0 +1,30 @@
+.section { position: relative; isolation: isolate; background: var(--background); color: var(--foreground); }
+.section::before { content: ''; position: absolute; z-index: -1; inset: 10% 0; pointer-events: none; background: radial-gradient(ellipse at 25% 45%, color-mix(in srgb, var(--brand-teal) 5%, transparent), transparent 65%); }
+.layout { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); align-items: center; gap: 3.5rem; }
+.eyebrow { color: var(--muted-foreground); font-size: var(--text-label); font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.eyebrow { color: var(--brand-teal); }
+.introduction { margin-top: 1.5rem; max-width: 36rem; font-size: var(--text-reading); line-height: 1.85; }
+.story { margin-top: 1rem; max-width: 36rem; color: var(--muted-foreground); font-size: var(--text-body); line-height: 1.85; }
+.actions { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+.primaryAction, .contactAction { display: inline-flex; align-items: center; justify-content: center; gap: .625rem; min-height: 44px; padding: .75rem 1rem; border-radius: 999px; font-size: var(--text-support); font-weight: 700; cursor: pointer; }
+.primaryAction { border: 1px solid var(--border); background: var(--panel-strong); color: var(--foreground); transition: border-color 180ms ease; }
+.primaryAction:hover { border-color: var(--brand-teal); }
+.contactAction { color: var(--muted-foreground); }
+.contactAction:hover { color: var(--foreground); }
+.contributions { margin-top: 1.5rem; }
+.contributionRail { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.contribution { display: flex; align-items: flex-start; gap: 1rem; padding: 1.5rem; border: 1px solid var(--border); border-radius: 1rem; background: var(--card); }
+.number { padding-top: .125rem; color: var(--brand-teal); font-size: var(--text-label); font-weight: 700; }
+.project { color: var(--muted-foreground); font-size: var(--text-micro); font-weight: 600; letter-spacing: .06em; }
+.description { margin-top: .625rem; color: var(--muted-foreground); font-size: var(--text-support); line-height: 1.8; }
+@media (max-width: 1023px) { .layout { grid-template-columns: 1fr; gap: 3rem; } .contributions { border-left: 0; padding-left: 0; } }
+@media (prefers-reduced-motion: reduce) { .primaryAction { transition: none; } }
+
+.eyebrow { display: flex; align-items: center; gap: 1rem; }
+.eyebrowLine { height: 1px; width: 8rem; background: linear-gradient(90deg, var(--brand-teal), transparent); }
+
+.portrait { overflow: hidden; border: 1px solid var(--border); border-radius: 1.5rem; background: var(--card); }
+.portraitImage { display: block; width: 100%; height: auto; }
+.portrait figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; padding: 1rem 1.25rem; font-size: var(--text-support); font-weight: 700; }
+.portrait figcaption span { color: var(--muted-foreground); font-weight: 400; }
+@media (max-width: 639px) { .contributionRail { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 88%; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: .75rem; } .contribution { scroll-snap-align: start; } .eyebrowLine { flex: 1; } }

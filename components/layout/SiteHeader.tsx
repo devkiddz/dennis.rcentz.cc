@@ -10,6 +10,7 @@ import {
   Menu,
   Moon,
   Sun,
+  UserRound,
   X
 } from 'lucide-react';
 
@@ -18,12 +19,18 @@ import { useTheme } from 'next-themes';
 import { useEffect, useState, useSyncExternalStore } from 'react';
 
 import { scrollToSection } from '@/lib/scrollToSection';
+import styles from './SiteHeader.module.css';
 
 const navItems = [
   {
     label: 'Home',
     target: 'home',
     icon: Home
+  },
+  {
+    label: 'Bio',
+    target: 'bio',
+    icon: UserRound
   },
   {
     label: 'Skills',
@@ -53,9 +60,16 @@ const navItems = [
 ] as const;
 
 const subscribe = () => () => {};
+const subscribeScroll = (onChange: () => void) => {
+  window.addEventListener('scroll', onChange, { passive: true });
+  return () => window.removeEventListener('scroll', onChange);
+};
+const getScrollSnapshot = () => window.scrollY > 48;
+const getServerScrollSnapshot = () => false;
 
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const scrolled = useSyncExternalStore(subscribeScroll, getScrollSnapshot, getServerScrollSnapshot);
 
   const [activeSection, setActiveSection] = useState<string>('home');
 
@@ -78,7 +92,7 @@ export function SiteHeader() {
 
     scrollToSection(target, {
       duration: 900,
-      offset: 24
+      offset: 104
     });
 
     setMobileOpen(false);
@@ -93,44 +107,34 @@ export function SiteHeader() {
     const sections = navItems
       .map(item => document.querySelector<HTMLElement>(`[data-section="${item.target}"]`))
       .filter((section): section is HTMLElement => section !== null);
-
-    if (sections.length === 0) return;
-
-    const observer = new IntersectionObserver(
-      entries => {
-        const visible = entries
-          .filter(entry => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-
-        const current = visible[0];
-
-        if (!current) return;
-
-        const target = current.target.getAttribute('data-section');
-
-        if (target) {
-          setActiveSection(target);
-        }
-      },
-      {
-        root: null,
-        rootMargin: '-30% 0px -55% 0px',
-        threshold: [0, 0.1, 0.25, 0.5]
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const readingLine = window.innerHeight * 0.35;
+      let current = sections[0];
+      for (const section of sections) {
+        if (section.getBoundingClientRect().top <= readingLine) current = section;
       }
-    );
-
-    sections.forEach(section => {
-      observer.observe(section);
-    });
-
+      const target = current?.dataset.section;
+      if (target) setActiveSection(target);
+    };
+    const scheduleUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
     return () => {
-      observer.disconnect();
+      window.removeEventListener('scroll', scheduleUpdate);
+      window.removeEventListener('resize', scheduleUpdate);
+      window.cancelAnimationFrame(frame);
     };
   }, []);
 
   return (
-    <header className="absolute inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6 sm:pt-5 lg:px-8">
-      <div className="mx-auto w-full max-w-[1240px]">
+    <header className={styles.header} data-scrolled={scrolled ? 'true' : undefined}
+      onKeyDown={event => { if (event.key === 'Escape') setMobileOpen(false); }}>
+      <div className={styles.container}>
         {/* ===================================================
             DESKTOP
             =================================================== */}
@@ -144,7 +148,7 @@ export function SiteHeader() {
                   type="button"
                   onClick={() => handleNavigation(target)}
                   data-active={activeSection === target ? 'true' : undefined}
-                  className="nav-link h-8 px-3 text-[12px]">
+                  className={`nav-link ${styles.navButton}`}>
                   <Icon size={14} strokeWidth={2} />
 
                   <span>{label}</span>
@@ -162,7 +166,7 @@ export function SiteHeader() {
             MOBILE / TABLET
             =================================================== */}
 
-        <div className="flex w-full items-center justify-between lg:hidden">
+        <div className={`${styles.mobileBar} flex w-full items-center justify-between lg:hidden`}>
           <button
             type="button"
             onClick={() => handleNavigation('home')}
@@ -177,7 +181,7 @@ export function SiteHeader() {
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold">Dennis O. Jones</p>
 
-              <p className="mt-0.5 truncate text-[11px] text-muted-foreground sm:text-xs">
+              <p className={`${styles.subtitle} mt-0.5 truncate text-[11px] text-muted-foreground sm:text-xs`}>
                 Frontend & Product Engineer
               </p>
             </div>
@@ -191,6 +195,7 @@ export function SiteHeader() {
               onClick={() => setMobileOpen(value => !value)}
               aria-label={mobileOpen ? 'Close navigation' : 'Open navigation'}
               aria-expanded={mobileOpen}
+              aria-controls="portfolio-mobile-navigation"
               className="glass-panel flex size-10 shrink-0 items-center justify-center rounded-full transition hover:border-brand-cyan/40">
               {mobileOpen ? <X size={17} strokeWidth={2} /> : <Menu size={17} strokeWidth={2} />}
             </button>
@@ -203,7 +208,7 @@ export function SiteHeader() {
 
         {mobileOpen ? (
           <div className="mt-4 w-full lg:hidden">
-            <nav className="mobile-nav-panel w-full">
+            <nav id="portfolio-mobile-navigation" aria-label="Main navigation" className={`mobile-nav-panel w-full ${styles.mobileMenu}`}>
               <div className="flex w-full flex-col space-y-1">
                 {navItems.map(({ label, target, icon: Icon }) => (
                   <button
@@ -211,7 +216,7 @@ export function SiteHeader() {
                     type="button"
                     onClick={() => handleNavigation(target)}
                     data-active={activeSection === target ? 'true' : undefined}
-                    className="nav-link min-h-11 w-full px-4">
+                    className={`nav-link min-h-11 w-full px-4 ${styles.mobileButton}`}>
                     <span className="mr-auto flex items-center space-x-3">
                       <Icon size={17} strokeWidth={2} className="shrink-0" />
 

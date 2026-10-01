@@ -1,0 +1,17 @@
+.header { position: fixed; inset: 0 0 auto; z-index: 50; padding: 1.25rem 1.5rem 0; pointer-events: none; transition: padding 250ms ease; }
+.container { width: 100%; max-width: 1240px; margin-inline: auto; pointer-events: auto; transition: max-width 250ms ease; }
+.header[data-scrolled="true"] { padding-top: .5rem; }
+.header[data-scrolled="true"] .container { max-width: 1120px; }
+.header :global(.portfolio-nav-inner) { background: var(--card); }
+.header :global(.portfolio-nav-shell) { box-shadow: 0 12px 32px rgb(0 0 0 / 12%); }
+.navButton { min-height: 2.75rem; padding: .625rem 1rem; margin: .125rem; border: 1px solid var(--border); border-radius: 999px; background: var(--card); font-weight: 700; transition: padding 250ms ease, min-height 250ms ease, background-color 200ms ease, border-color 200ms ease; }
+.header[data-scrolled="true"] .navButton { min-height: 2.25rem; padding: .375rem .875rem; }
+.navButton:global([data-active="true"]), .mobileButton:global([data-active="true"]) { border-color: color-mix(in srgb, var(--brand-teal) 45%, var(--border)); background: color-mix(in srgb, var(--brand-teal) 12%, var(--card)); }
+.mobileBar { padding: .875rem 1rem; border: 1px solid var(--border); border-radius: 1.5rem; background: var(--card); box-shadow: 0 12px 32px rgb(0 0 0 / 14%); transition: padding 250ms ease, border-radius 250ms ease; }
+.header[data-scrolled="true"] .mobileBar { padding-block: .625rem; border-radius: 999px; }
+.subtitle { max-height: 1.5rem; opacity: 1; transition: max-height 250ms ease, opacity 200ms ease, margin 250ms ease; }
+.header[data-scrolled="true"] .subtitle { max-height: 0; opacity: 0; margin-top: 0; overflow: hidden; }
+.mobileMenu { border: 1px solid var(--border); border-radius: 1.5rem; background: var(--card); max-height: calc(100svh - 7rem); overflow-y: auto; backdrop-filter: none; }
+.mobileButton { border: 1px solid var(--border); border-radius: 999px; background: var(--card); font-weight: 700; }
+@media (max-width: 639px) { .header { padding: .75rem .75rem 0; } .mobileBar { padding: .75rem; } }
+@media (prefers-reduced-motion: reduce) { .header, .container, .navButton, .mobileBar, .subtitle { transition: none; } }

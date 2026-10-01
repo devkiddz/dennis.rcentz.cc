@@ -15,22 +15,28 @@ export function scrollToSection(
     '(prefers-reduced-motion: reduce)'
   ).matches;
 
-  const offset = options?.offset ?? 24;
+  const anchor = section.querySelector<HTMLElement>('[data-scroll-anchor]') ?? section;
+  const header = document.querySelector<HTMLElement>('header');
+  const headerBottom = header?.getBoundingClientRect().bottom ?? 64;
+  const offset = target === 'bio'
+    ? Math.max(80, headerBottom + 24)
+    : options?.offset ?? 104;
   const duration = options?.duration ?? 900;
 
   const startY = window.scrollY;
 
-  const targetY =
-    section.getBoundingClientRect().top +
+  const targetY = Math.max(0,
+    anchor.getBoundingClientRect().top +
     window.scrollY -
-    offset;
+    offset);
 
   const distance = targetY - startY;
 
   if (reduceMotion) {
     window.scrollTo({
       top: targetY,
-      left: 0
+      left: 0,
+      behavior: 'instant'
     });
 
     return;
@@ -60,7 +66,8 @@ export function scrollToSection(
 
     window.scrollTo({
       top: startY + distance * easedProgress,
-      left: 0
+      left: 0,
+      behavior: 'instant'
     });
 
     if (progress < 1) {
