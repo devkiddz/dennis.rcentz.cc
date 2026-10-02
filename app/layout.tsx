@@ -1,27 +1,21 @@
 import type { Metadata } from 'next';
+import { siteUrl, previewDeployment } from '@/lib/seo';
 
+import { DenokWidget } from '@/features/denok/DenokWidget';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 
 import './globals.css';
+import './polish.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://dennis.rcentz.cc'),
-
-  title: {
-    default: 'Dennis O. Jones — Frontend & Product Engineer',
-    template: '%s | Dennis O. Jones'
-  },
-
-  description:
-    'Dennis O. Jones is a Frontend & Product Engineer building modern digital products with React, Next.js, TypeScript and practical full-stack architecture.',
-
-  openGraph: {
-    title: 'Dennis O. Jones — Frontend & Product Engineer',
-    description: 'Product engineering, frontend systems and practical full-stack development.',
-    url: 'https://dennis.rcentz.cc',
-    siteName: 'Dennis O. Jones',
-    type: 'website'
-  }
+  metadataBase: new URL(siteUrl),
+  title: { default: 'Dennis Okaro Jones — Software Developer', template: '%s | Dennis O. Jones' },
+  description: 'Dennis Okaro Jones builds business websites, web applications and practical product systems with React, Next.js and TypeScript.',
+  applicationName: 'Dennis Okaro Jones Portfolio',
+  authors: [{ name: 'Dennis Okaro Jones', url: siteUrl }],
+  creator: 'Dennis Okaro Jones',
+  robots: previewDeployment ? { index: false, follow: false } : { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1, 'max-video-preview': -1 } },
+  verification: process.env.GOOGLE_SITE_VERIFICATION ? { google: process.env.GOOGLE_SITE_VERIFICATION } : undefined
 };
 
 export default function RootLayout({
@@ -32,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="bg-background font-sans text-foreground antialiased">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider><a href="#main-content" className="skip-link">Skip to content</a>{children}<DenokWidget /></ThemeProvider>
       </body>
     </html>
   );

@@ -1,0 +1,19 @@
+/* Semantic fallbacks for the shared button treatments. */
+:root {
+  --button-primary-inner: var(--hero-action-inner);
+  --button-primary-inner-hover: var(--hero-action-inner-hover);
+  --button-primary-shadow: var(--hero-action-shadow);
+  --button-primary-shadow-hover: var(--hero-action-shadow-hover);
+  --button-primary-glow: var(--hero-action-glow);
+  --button-quiet-border: var(--hero-action-secondary-border);
+  --button-quiet-border-hover: var(--hero-action-secondary-border-hover);
+  --button-quiet-inner: var(--hero-action-inner);
+  --button-quiet-inner-hover: var(--hero-action-secondary-inner-hover);
+}
+.skip-link { position: fixed; z-index: 100; top: .75rem; left: .75rem; transform: translateY(-200%); border: 1px solid var(--ring); border-radius: 999px; padding: .75rem 1rem; background: var(--card); color: var(--foreground); font-weight: 700; }
+.skip-link:focus { transform: translateY(0); }
+[data-section] { scroll-margin-top: 7rem; }
+#main-content { min-width: 0; }
+.dark .workspace-window { box-shadow: 0 20px 52px var(--workspace-shadow), inset 0 1px 0 color-mix(in srgb, var(--foreground) 4%, transparent), inset 0 -12px 22px rgb(0 0 0 / 8%); }
+@media (max-width: 639px) { .dark .workspace-window { box-shadow: 0 14px 34px var(--workspace-shadow), inset 0 1px 0 color-mix(in srgb, var(--foreground) 4%, transparent); } }
+@keyframes gradient-border-run { to { background-position: 300% 50%; } }

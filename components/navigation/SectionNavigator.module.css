@@ -12,3 +12,13 @@
 
 @media (max-width: 1279px) { .markers { top: auto; bottom: max(1rem, env(safe-area-inset-bottom)); left: 50%; right: auto; transform: translateX(-50%); flex-direction: row; } .marker { width: 44px; height: 44px; } .marker[aria-current] .dot { height: 5px; width: 18px; } .tooltip { bottom: calc(100% + .5rem); right: 50%; transform: translateX(50%); } }
 @media (prefers-reduced-motion: reduce) { .dot, .top { transition: none; } }
+
+.mobileNavigation { display: none; }
+@media(max-width: 767px) {
+ .markers { display: none; }
+ .mobileNavigation { position: fixed; z-index: 45; bottom: 0; left: 0; right: 0; display: flex; gap: .125rem; padding: .5rem .5rem calc(.5rem + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: var(--card); box-shadow: 0 -6px 24px var(--nav-shadow); overflow-x: auto; }
+ .mobileNavigation a { display: flex; flex: 1 0 48px; min-height: 48px; flex-direction: column; align-items: center; justify-content: center; gap: .3rem; border-radius: .75rem; color: var(--muted-foreground); }
+ .mobileNavigation span { font-size: .625rem; font-weight: 600; }
+ .mobileNavigation a[aria-current] { color: var(--brand-teal); background: color-mix(in srgb, var(--brand-teal) 10%, var(--card)); }
+ .top { left: .75rem; right: auto; bottom: calc(5.25rem + env(safe-area-inset-bottom)); }
+}

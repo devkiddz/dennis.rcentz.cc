@@ -1,3 +1,5 @@
+import { DenokTrigger } from '@/features/denok/DenokTrigger';
+import styles from './Hero.module.css';
 import { ScrollCue } from '@/components/navigation/ScrollCue';
 import { SectionButton } from '@/components/navigation/SectionButton';
 
@@ -7,11 +9,11 @@ import { HeroStage } from './HeroStage';
 
 export function Hero() {
   return (
-    <section data-section="home" className="relative isolate min-h-screen overflow-hidden">
+    <section id="home" data-section="home" className="relative isolate min-h-svh overflow-hidden">
       <HeroEnvironment />
 
       <div className="relative z-10 mx-auto w-full max-w-[1480px] px-4 sm:px-7 lg:px-10">
-        <div className="mx-auto grid min-h-screen w-full max-w-[1320px] items-center gap-10 pb-36 pt-24 sm:pt-28 lg:grid-cols-[1.04fr_0.96fr] lg:gap-8 lg:pb-36 lg:pt-24">
+        <div className="mx-auto grid min-h-svh w-full max-w-[1320px] items-center gap-10 pb-36 pt-40 sm:pt-44 lg:grid-cols-[1.04fr_0.96fr] lg:gap-8 lg:pb-36 lg:pt-40">
           {/* =================================================
               IDENTITY
               ================================================= */}
@@ -42,7 +44,7 @@ export function Hero() {
                 <span>Hello I&apos;m</span>
               </p>
 
-              <h1 className="whitespace-nowrap font-heading text-[2.65rem] font-extrabold sm:text-[3.45rem] md:text-[3.8rem] lg:text-[4.25rem] xl:text-[4.55rem]">
+              <h1 className={`${styles.name} font-heading font-extrabold`}>
                 <span>Dennis O. </span>
 
                 <span className="gradient-text pr-[0.04em]">Jones</span>
@@ -62,9 +64,9 @@ export function Hero() {
                 ================================================= */}
 
             <p className="mt-4 max-w-[590px] text-[14px] font-medium leading-6 text-muted-foreground sm:text-[15px] sm:leading-7">
-              I build modern product systems with React, Next.js, TypeScript and practical full-stack
-              architecture — from interface behaviour to data, workflows and production-minded application
-              structure.
+              I build business websites, web applications and mobile apps — from a professional online
+              presence to marketplaces, financial platforms and practical business systems.
+              React, Next.js and TypeScript power my frontend and product engineering work.
             </p>
 
             {/* =================================================
@@ -76,9 +78,9 @@ export function Hero() {
                 <span className="hero-action__inner">View my work</span>
               </SectionButton>
 
-              <SectionButton target="denok" className="hero-action hero-action--secondary w-full sm:w-auto">
+              <DenokTrigger className="hero-action hero-action--secondary w-full sm:w-auto">
                 <span className="hero-action__inner">Ask Denok</span>
-              </SectionButton>
+              </DenokTrigger>
             </div>
           </div>
 

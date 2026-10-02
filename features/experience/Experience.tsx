@@ -17,7 +17,7 @@ const roles = [
 
 export function Experience() {
   return (
-    <section data-section="experience" aria-labelledby="experience-heading" className={styles.section}>
+    <section id="experience" data-section="experience" aria-labelledby="experience-heading" className={styles.section}>
       <div className="mx-auto max-w-7xl px-4 py-24 sm:px-7 sm:py-28 lg:px-10">
         <div className={styles.heading}>
           <p className={styles.eyebrow}>03 / Experience <span aria-hidden="true" /></p>

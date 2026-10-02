@@ -1,19 +1,21 @@
 'use client';
 
 import {
-  Bot,
   BriefcaseBusiness,
   Code2,
   FolderKanban,
-  GraduationCap,
   Home,
   Menu,
+  Mail,
   Moon,
   Sun,
   UserRound,
   X
 } from 'lucide-react';
 
+import Link from 'next/link';
+import { BrandMark } from '@/components/brand/BrandMark';
+import { usePathname, useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 
 import { useEffect, useState, useSyncExternalStore } from 'react';
@@ -22,16 +24,17 @@ import { scrollToSection } from '@/lib/scrollToSection';
 import styles from './SiteHeader.module.css';
 
 const navItems = [
-  {
-    label: 'Home',
-    target: 'home',
-    icon: Home
-  },
+  // {
+  //   label: 'Home',
+  //   target: 'home',
+  //   icon: Home
+  // },
   {
     label: 'Bio',
     target: 'bio',
     icon: UserRound
   },
+  { label: 'Services', target: 'services', icon: BriefcaseBusiness },
   {
     label: 'Skills',
     target: 'skills',
@@ -43,20 +46,22 @@ const navItems = [
     icon: BriefcaseBusiness
   },
   {
-    label: 'Education',
-    target: 'education',
-    icon: GraduationCap
-  },
-  {
-    label: 'Projects',
+    label: 'Portfolio',
     target: 'projects',
     icon: FolderKanban
   },
   {
-    label: 'Ask Denok',
-    target: 'denok',
-    icon: Bot
+    label: 'Contact',
+    target: 'contact',
+    icon: Mail
   }
+] as const;
+
+const pageNavItems = [
+  { label: 'Home', target: 'home', icon: Home },
+  { label: 'Portfolio', target: 'projects', icon: FolderKanban },
+  { label: 'Services', target: 'services', icon: BriefcaseBusiness },
+  { label: 'Contact', target: 'contact', icon: Mail }
 ] as const;
 
 const subscribe = () => () => {};
@@ -68,6 +73,20 @@ const getScrollSnapshot = () => window.scrollY > 48;
 const getServerScrollSnapshot = () => false;
 
 export function SiteHeader() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const homePage = pathname === '/';
+  const visibleItems = homePage ? navItems : pageNavItems;
+  const navigationHref = (target: string) =>
+    homePage && target !== 'contact' ? `/#${target}` : target === 'home' ? '/' : `/${target}`;
+  const currentNavigation = (target: string): 'location' | 'page' | undefined =>
+    homePage && target !== 'contact'
+      ? activeSection === target
+        ? 'location'
+        : undefined
+      : pathname === navigationHref(target)
+        ? 'page'
+        : undefined;
   const [mobileOpen, setMobileOpen] = useState(false);
   const scrolled = useSyncExternalStore(subscribeScroll, getScrollSnapshot, getServerScrollSnapshot);
 
@@ -104,6 +123,7 @@ export function SiteHeader() {
      ========================================================= */
 
   useEffect(() => {
+    if (pathname !== '/') return;
     const sections = navItems
       .map(item => document.querySelector<HTMLElement>(`[data-section="${item.target}"]`))
       .filter((section): section is HTMLElement => section !== null);
@@ -122,6 +142,8 @@ export function SiteHeader() {
       if (!frame) frame = window.requestAnimationFrame(update);
     };
     update();
+    const hash = window.location.hash.slice(1);
+    if (pathname === '/' && hash) scrollToSection(hash, { duration: 1 });
     window.addEventListener('scroll', scheduleUpdate, { passive: true });
     window.addEventListener('resize', scheduleUpdate);
     return () => {
@@ -129,36 +151,97 @@ export function SiteHeader() {
       window.removeEventListener('resize', scheduleUpdate);
       window.cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [pathname]);
 
   return (
-    <header className={styles.header} data-scrolled={scrolled ? 'true' : undefined}
-      onKeyDown={event => { if (event.key === 'Escape') setMobileOpen(false); }}>
+    <header
+      className={styles.header}
+      data-scrolled={scrolled ? 'true' : undefined}
+      onKeyDown={event => {
+        if (event.key === 'Escape') setMobileOpen(false);
+      }}>
       <div className={styles.container}>
         {/* ===================================================
             DESKTOP
             =================================================== */}
 
-        <div className="hidden justify-center lg:flex">
-          <div className="portfolio-nav-shell">
-            <div className="portfolio-nav-inner gap-0.5 p-1">
-              {navItems.map(({ label, target, icon: Icon }) => (
-                <button
-                  key={label}
-                  type="button"
-                  onClick={() => handleNavigation(target)}
-                  data-active={activeSection === target ? 'true' : undefined}
-                  className={`nav-link ${styles.navButton}`}>
-                  <Icon size={14} strokeWidth={2} />
+        <div className={`hidden lg:flex ${styles.desktopBar}`}>
+          <div className={`portfolio-nav-shell ${styles.desktopShell}`}>
+            <nav
+              aria-label="Main navigation"
+              className={`portfolio-nav-inner gap-0.5 p-1 ${styles.desktopInner}`}>
+              <Link
+                href={homePage ? '/#home' : '/'}
+                aria-label="Dennis O. Jones home"
+                className={styles.brandLink}
+                onClick={event => {
+                  if (
+                    pathname === '/' &&
+                    !event.metaKey &&
+                    !event.ctrlKey &&
+                    !event.shiftKey &&
+                    !event.altKey &&
+                    event.button === 0
+                  ) {
+                    event.preventDefault();
+                    handleNavigation('home');
+                  }
+                }}>
+                <BrandMark />
+              </Link>
+              {visibleItems
+                .filter(item => item.target !== 'services')
+                .map(({ label, target, icon: Icon }) => (
+                  <Link
+                    key={label}
+                    href={navigationHref(target)}
+                    onClick={event => {
+                      setMobileOpen(false);
+                      if (
+                        target !== 'contact' &&
+                        pathname === '/' &&
+                        !event.metaKey &&
+                        !event.ctrlKey &&
+                        !event.shiftKey &&
+                        !event.altKey &&
+                        event.button === 0
+                      ) {
+                        event.preventDefault();
+                        handleNavigation(target);
+                      }
+                    }}
+                    aria-current={currentNavigation(target)}
+                    data-active={currentNavigation(target) ? 'true' : undefined}
+                    className={`nav-link ${styles.navButton}`}>
+                    <Icon size={14} strokeWidth={2} />
 
-                  <span>{label}</span>
-                </button>
-              ))}
+                    <span>{label}</span>
+                  </Link>
+                ))}
 
-              <div className="ml-1 border-l border-border/50 pl-2">
+              <div className={styles.endActions}>
+                <Link
+                  href={navigationHref('services')}
+                  className={styles.servicesButton}
+                  aria-current={currentNavigation('services')}
+                  onClick={event => {
+                    if (
+                      pathname === '/' &&
+                      !event.metaKey &&
+                      !event.ctrlKey &&
+                      !event.shiftKey &&
+                      !event.altKey &&
+                      event.button === 0
+                    ) {
+                      event.preventDefault();
+                      handleNavigation('services');
+                    }
+                  }}>
+                  Services
+                </Link>
                 <ThemeSwitch isClient={isClient} dark={dark} onToggle={toggleTheme} compact />
               </div>
-            </div>
+            </nav>
           </div>
         </div>
 
@@ -169,19 +252,21 @@ export function SiteHeader() {
         <div className={`${styles.mobileBar} flex w-full items-center justify-between lg:hidden`}>
           <button
             type="button"
-            onClick={() => handleNavigation('home')}
+            onClick={() => {
+              if (pathname !== '/') router.push('/');
+              else handleNavigation('home');
+            }}
             aria-label="Dennis O. Jones home"
             className="flex min-w-0 items-center gap-3 text-left">
-            <div className="portfolio-nav-shell shrink-0">
-              <div className="portfolio-nav-inner flex size-10 items-center justify-center">
-                <span className="text-xs font-bold">DO</span>
-              </div>
-            </div>
+            <span className={styles.mobileLogo}>
+              <BrandMark />
+            </span>
 
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold">Dennis O. Jones</p>
 
-              <p className={`${styles.subtitle} mt-0.5 truncate text-[11px] text-muted-foreground sm:text-xs`}>
+              <p
+                className={`${styles.subtitle} mt-0.5 truncate text-[11px] text-muted-foreground sm:text-xs`}>
                 Frontend & Product Engineer
               </p>
             </div>
@@ -208,21 +293,39 @@ export function SiteHeader() {
 
         {mobileOpen ? (
           <div className="mt-4 w-full lg:hidden">
-            <nav id="portfolio-mobile-navigation" aria-label="Main navigation" className={`mobile-nav-panel w-full ${styles.mobileMenu}`}>
+            <nav
+              id="portfolio-mobile-navigation"
+              aria-label="Main navigation"
+              className={`mobile-nav-panel w-full ${styles.mobileMenu}`}>
               <div className="flex w-full flex-col space-y-1">
-                {navItems.map(({ label, target, icon: Icon }) => (
-                  <button
+                {visibleItems.map(({ label, target, icon: Icon }) => (
+                  <Link
                     key={label}
-                    type="button"
-                    onClick={() => handleNavigation(target)}
-                    data-active={activeSection === target ? 'true' : undefined}
+                    href={navigationHref(target)}
+                    onClick={event => {
+                      setMobileOpen(false);
+                      if (
+                        target !== 'contact' &&
+                        pathname === '/' &&
+                        !event.metaKey &&
+                        !event.ctrlKey &&
+                        !event.shiftKey &&
+                        !event.altKey &&
+                        event.button === 0
+                      ) {
+                        event.preventDefault();
+                        handleNavigation(target);
+                      }
+                    }}
+                    aria-current={currentNavigation(target)}
+                    data-active={currentNavigation(target) ? 'true' : undefined}
                     className={`nav-link min-h-11 w-full px-4 ${styles.mobileButton}`}>
                     <span className="mr-auto flex items-center space-x-3">
                       <Icon size={17} strokeWidth={2} className="shrink-0" />
 
                       <span>{label}</span>
                     </span>
-                  </button>
+                  </Link>
                 ))}
               </div>
             </nav>

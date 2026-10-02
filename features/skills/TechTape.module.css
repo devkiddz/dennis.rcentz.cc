@@ -1,0 +1,12 @@
+.section { padding-block: 2rem 3rem; background: var(--background); color: var(--foreground); }
+.heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .75rem; }
+.heading h2 { font-size: var(--text-label); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted-foreground); }
+.control { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--border); border-radius: 50%; color: var(--muted-foreground); background: var(--card); cursor: pointer; }
+.control:hover { color: var(--foreground); border-color: var(--brand-teal); }
+.viewport { overflow: hidden; padding-block: 1rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); mask-image: linear-gradient(90deg, transparent, black 4%, black 96%, transparent); }
+.track { display: flex; width: max-content; animation: tape-scroll 48s linear infinite; }
+.group { display: flex; align-items: center; flex: none; gap: .75rem; padding-right: .75rem; }
+.group > * { flex: none; }
+.viewport:hover .track, .viewport:focus-within .track, .viewport[data-paused] .track { animation-play-state: paused; }
+@keyframes tape-scroll { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .track { animation: none; } .track > :nth-child(2) { display: none; } .viewport { overflow-x: auto; mask-image: none; } .control { display: none; } }

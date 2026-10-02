@@ -1,4 +1,4 @@
-import { ArrowUpRight } from 'lucide-react';
+﻿import { ArrowUpRight } from 'lucide-react';
 
 import { StackBadge } from './StackBadge';
 import styles from './Skills.module.css';
@@ -32,7 +32,7 @@ const capabilityCards = [
 
 export function Skills() {
   return (
-    <section data-section="skills" aria-labelledby="skills-heading" className={styles.section}>
+    <section id="skills" data-section="skills" aria-labelledby="skills-heading" className={styles.section}>
       <div className="pb-20 pt-28 sm:pb-24 sm:pt-36 lg:pt-40">
         <div
           className={`${styles.heading} mx-auto max-w-7xl px-4 text-left! sm:px-7 sm:text-center! lg:px-10`}>
@@ -46,7 +46,7 @@ export function Skills() {
           </h2>
 
           <p className="mx-0! mt-5 max-w-2xl text-sm leading-7 text-muted-foreground sm:mx-auto! sm:text-base">
-            Interfaces, data and workflows — connected through thoughtful product engineering.
+            Interfaces, data and workflows â€” connected through thoughtful product engineering.
           </p>
         </div>
 
@@ -92,8 +92,8 @@ export function Skills() {
           </div>
 
           <p className={`${styles.principles} justify-start! text-left sm:justify-center! sm:text-center`}>
-            Build <span aria-hidden="true">·</span> Harden
-            <span aria-hidden="true">·</span> Improve
+            Build <span aria-hidden="true">Â·</span> Harden
+            <span aria-hidden="true">Â·</span> Improve
           </p>
         </div>
       </div>

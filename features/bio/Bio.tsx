@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { SectionButton } from '@/components/navigation/SectionButton';
 import styles from './Bio.module.css';
@@ -23,7 +24,7 @@ const contributions = [
 
 export function Bio() {
   return (
-    <section data-section="bio" aria-labelledby="bio-heading" className={styles.section}>
+    <section id="bio" data-section="bio" aria-labelledby="bio-heading" className={styles.section}>
       <div className="mx-auto max-w-7xl px-4 pt-40 pb-24 sm:px-7 sm:pt-48 sm:pb-28 lg:px-10 lg:pt-56">
         <div className={styles.layout} data-scroll-anchor="bio">
           <figure className={styles.portrait}>
@@ -52,9 +53,9 @@ export function Bio() {
               <SectionButton target="skills" className={styles.primaryAction}>
                 Explore my capabilities <ArrowDown size={16} aria-hidden="true" />
               </SectionButton>
-              <a href="mailto:dennis@rcentz.cc" className={styles.contactAction}>
+              <Link href="/contact" className={styles.contactAction}>
                 Let’s connect <ArrowUpRight size={16} aria-hidden="true" />
-              </a>
+              </Link>
             </div>
           </div>
         </div>

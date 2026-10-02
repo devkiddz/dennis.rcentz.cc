@@ -1,0 +1,2 @@
+.mark { display: inline-flex; align-items: baseline; gap: 0.2rem; color: var(--foreground); font-size: 1.2rem; font-weight: 600; line-height: 1; letter-spacing: -0.09em; white-space: nowrap; }
+.dot { display: inline-block; width: 0.28rem; height: 0.28rem; flex-shrink: 0; border-radius: 50%; background-color: var(--brand-teal); }

@@ -1,0 +1,2 @@
+.name { font-size: clamp(2rem, 8.5vw, 4.55rem); line-height: 1.2; letter-spacing: -.045em; }
+@media (min-width: 1024px) { .name { font-size: clamp(3rem, 5vw, 4.55rem); } }
