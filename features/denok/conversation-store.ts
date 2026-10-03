@@ -1,9 +1,9 @@
 'use client';
 
 import { getKnowledgeEntry } from './knowledge';
-import { matchQuestion } from './match-question';
+import { interpretQuestion } from './match-question';
 
-export type Message = { id: number; role: 'visitor'; text: string } | { id: number; role: 'denok'; entryId?: string };
+export type Message = { id: number; role: 'visitor'; text: string } | { id: number; role: 'denok'; entryId?: string; suggestionIds?: string[]; kind?: 'answer' | 'clarify' | 'unknown' };
 type Snapshot = { messages: Message[]; typing: boolean; storageAvailable: boolean };
 const storageKey = 'dennis.denok.conversation.v1';
 const retention = 30 * 24 * 60 * 60 * 1000;
@@ -27,11 +27,13 @@ export function parseConversation(raw: string | null, now = Date.now()): Message
     let previous = -1;
     for (const item of value.messages) {
       if (!item || typeof item !== 'object') return [];
-      const message = item as { id?: unknown; role?: unknown; text?: unknown; entryId?: unknown };
+      const message = item as { id?: unknown; role?: unknown; text?: unknown; entryId?: unknown; suggestionIds?: unknown; kind?: unknown };
       if (typeof message.id !== 'number' || !Number.isSafeInteger(message.id) || message.id <= previous) return [];
       previous = message.id;
       if (message.role === 'visitor' && typeof message.text === 'string' && message.text.trim() && message.text.length <= 300) messages.push({ id: message.id, role: 'visitor', text: message.text });
-      else if (message.role === 'denok' && (message.entryId === undefined || typeof message.entryId === 'string')) messages.push({ id: message.id, role: 'denok', entryId: typeof message.entryId === 'string' && getKnowledgeEntry(message.entryId) ? message.entryId : undefined });
+      else if (message.role === 'denok' && (message.entryId === undefined || typeof message.entryId === 'string')) messages.push({ id: message.id, role: 'denok', entryId: typeof message.entryId === 'string' && getKnowledgeEntry(message.entryId) ? message.entryId : undefined,
+        suggestionIds: Array.isArray(message.suggestionIds) ? [...new Set(message.suggestionIds.filter((id): id is string => typeof id === 'string' && Boolean(getKnowledgeEntry(id))))].slice(0, 3) : undefined,
+        kind: message.kind === 'answer' || message.kind === 'clarify' || message.kind === 'unknown' ? message.kind : undefined });
       else return [];
     }
     return messages;
@@ -55,14 +57,18 @@ function load() {
   } catch { snapshot = { ...empty, storageAvailable: false }; }
 }
 function scheduleReply(visitor: Extract<Message, { role: 'visitor' }>, entryId?: string) {
-  const entry = entryId ? getKnowledgeEntry(entryId) : matchQuestion(visitor.text);
+  const previous = [...snapshot.messages].reverse().find(message => message.role === 'denok' && message.entryId);
+  const result = entryId && getKnowledgeEntry(entryId)
+    ? { kind: 'answer' as const, entryId, suggestionIds: getKnowledgeEntry(entryId)!.followUps.slice(0, 3) }
+    : interpretQuestion(visitor.text, previous?.role === 'denok' ? previous.entryId : undefined);
+  const entry = result.entryId ? getKnowledgeEntry(result.entryId) : undefined;
   snapshot = { ...snapshot, typing: true };
   emit();
   const delay = 1800 + Math.min(2000, (entry?.answer.join(' ').length ?? 300) * 3);
   replyTimer = setTimeout(() => {
     // A reset or a newer restored conversation must not receive a stale reply.
     if (snapshot.messages[snapshot.messages.length - 1]?.id !== visitor.id) return;
-    const reply: Message = { id: nextId++, role: 'denok', entryId: entry?.id };
+    const reply: Message = { id: nextId++, role: 'denok', entryId: entry?.id, kind: result.kind, suggestionIds: result.suggestionIds };
     snapshot = { ...snapshot, messages: [...snapshot.messages, reply].slice(-40), typing: false };
     persist();
     emit();

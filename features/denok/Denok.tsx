@@ -15,7 +15,7 @@ export function Denok({ embedded = false, visible = true, onContact }: { embedde
   const headingId = useId();
   const last = messages[messages.length - 1];
   const lastEntry = last?.role === 'denok' && last.entryId ? getKnowledgeEntry(last.entryId) : undefined;
-  const followUps = typing ? [] : !messages.length ? openingSuggestions.slice(0, 3) : lastEntry ? (lastEntry.category === 'contact' ? [] : lastEntry.followUps.slice(0, 3)) : ['overview', 'projects', 'contact'];
+  const followUps = typing ? [] : !messages.length ? openingSuggestions.slice(0, 3) : last?.role === 'denok' && last.suggestionIds ? last.suggestionIds : lastEntry ? (lastEntry.category === 'contact' ? [] : lastEntry.followUps.slice(0, 3)) : ['overview', 'projects', 'contact'];
   const transcript = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -43,10 +43,10 @@ export function Denok({ embedded = false, visible = true, onContact }: { embedde
           const entry = message.entryId ? getKnowledgeEntry(message.entryId) : undefined;
           return <div key={message.id} className={styles.assistantMessage}>{entry ? <>{entry.answer.map(paragraph => <p key={paragraph}>{paragraph}</p>)}{entry.id === 'contact' && onContact ? <button type="button" className={styles.inlineContact} onClick={onContact}>Send Dennis a message <ArrowUpRight size={15} aria-hidden="true" /></button> : null}{entry.links?.length ? <div className={styles.answerLinks}>{entry.links.map(link => {
             return <Link key={link.href} href={link.href} target="_blank" rel="noopener noreferrer">{link.label}<ArrowUpRight size={15} aria-hidden="true" /></Link>;
-          })}</div> : null}</> : <><p>I don’t have a confident match for that question in Dennis’s portfolio information. Choose a topic below, try a specific project name, or contact Dennis directly.</p>{onContact ? <button type="button" className={styles.inlineContact} onClick={onContact}>Contact Dennis <ArrowUpRight size={15} aria-hidden="true" /></button> : <a className={styles.inlineContact} href="mailto:denngodfirst@gmail.com" target="_blank" rel="noopener noreferrer">Email Dennis</a>}</>}</div>;
+          })}</div> : null}</> : <><p>{message.kind === 'clarify' ? 'I found related topics, but I’m not sure which you mean. Choose the question closest to yours below, or add a little more detail.' : 'I don’t have a reliable answer to that in Dennis’s portfolio information. You can explore the questions below or ask Dennis directly.'}</p>{message.suggestionIds?.length ? <div className={styles.suggestions} aria-label="Related reference questions">{message.suggestionIds.map(id => { const topic = getKnowledgeEntry(id); return topic ? <button type="button" key={id} onClick={() => answer(topic.question, id)}>{topic.question}</button> : null; })}</div> : null}{onContact ? <button type="button" className={styles.inlineContact} onClick={onContact}>Contact Dennis <ArrowUpRight size={15} aria-hidden="true" /></button> : <a className={styles.inlineContact} href="mailto:denngodfirst@gmail.com" target="_blank" rel="noopener noreferrer">Email Dennis</a>}</>}</div>;
         })}
         {typing ? <div className={`${styles.assistantMessage} ${styles.typing}`} role="status" aria-label="Denok is typing"><span aria-hidden="true" /><span aria-hidden="true" /><span aria-hidden="true" /></div> : null}
-        <div className={styles.suggestions} aria-label="Suggested questions">{followUps.map(id => { const entry = getKnowledgeEntry(id); return entry ? <button type="button" key={id} onClick={() => answer(entry.question, id)}>{entry.question}</button> : null; })}</div>
+        <div className={styles.suggestions} aria-label="Suggested questions">{(last?.role === 'denok' && !last.entryId && last.suggestionIds?.length ? [] : followUps).map(id => { const entry = getKnowledgeEntry(id); return entry ? <button type="button" key={id} onClick={() => answer(entry.question, id)}>{entry.question}</button> : null; })}</div>
       </div>
       <div className={styles.composer}>
 
