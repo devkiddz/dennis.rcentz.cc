@@ -40,7 +40,7 @@ export function Hero() {
                 ================================================= */}
 
             <div>
-              <p className="gradient-text inline-flex translate-y-5 items-center text-[2.65rem] font-heading font-extrabold sm:text-[2.35rem] md:text-[3.8rem] lg:translate-y-8 lg:text-[3.65rem] xl:text-[4rem]">
+              <p className="gradient-text inline-flex translate-y-2 md:translate-y-5 items-center text-[2rem] font-heading font-extrabold md:text-[3.8rem] lg:translate-y-8 lg:text-[3.65rem] xl:text-[4rem]">
                 <span>Hello I&apos;m</span>
               </p>
 
@@ -65,8 +65,8 @@ export function Hero() {
 
             <p className="mt-4 max-w-[590px] text-[14px] font-medium leading-6 text-muted-foreground sm:text-[15px] sm:leading-7">
               I build business websites, web applications and mobile apps — from a professional online
-              presence to marketplaces, financial platforms and practical business systems.
-              React, Next.js and TypeScript power my frontend and product engineering work.
+              presence to marketplaces, financial platforms and practical business systems. React, Next.js and
+              TypeScript power my frontend and product engineering work.
             </p>
 
             {/* =================================================
