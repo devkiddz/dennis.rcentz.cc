@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import { DenokTrigger } from '@/features/denok/DenokTrigger';
 import { BrandMark } from '@/components/brand/BrandMark';
 import { ArrowUpRight, Mail } from 'lucide-react';
@@ -17,7 +17,7 @@ export function SiteFooter() {
               <p className={styles.eyebrow}>Have something worth building?</p>
               <h2 id="footer-heading">Let’s make it <span className="gradient-text">work beautifully.</span></h2>
               <p className={styles.description}>Thoughtful interfaces. Dependable workflows. Practical product engineering.</p>
-              <a className={styles.contact} href="mailto:dennis@rcentz.cc"><Mail size={17} aria-hidden="true" /> dennis@rcentz.cc <ArrowUpRight size={17} aria-hidden="true" /></a>
+              <a className={styles.contact} href="mailto:denngodfirst@gmail.com"><Mail size={17} aria-hidden="true" /> denngodfirst@gmail.com <ArrowUpRight size={17} aria-hidden="true" /></a>
             </div>
             <div className={styles.links}>
               <nav aria-label="Footer navigation"><p className={styles.label}>Explore</p>
@@ -30,7 +30,7 @@ export function SiteFooter() {
               </nav>
               <div><p className={styles.label}>Connect</p>
                 <a href="https://github.com/devkiddz" target="_blank" rel="noopener noreferrer"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={stackBrands.GitHub.path} /></svg> GitHub <ArrowUpRight size={14} aria-hidden="true" /></a>
-                <a href="mailto:dennis@rcentz.cc"><Mail size={15} aria-hidden="true" /> Email Dennis <ArrowUpRight size={14} aria-hidden="true" /></a>
+                <a href="mailto:denngodfirst@gmail.com"><Mail size={15} aria-hidden="true" /> Email Dennis <ArrowUpRight size={14} aria-hidden="true" /></a>
               </div>
             </div>
           </div>

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Script from 'next/script';
 import { useEffect, useId, useRef, useState } from 'react';
@@ -51,7 +51,7 @@ export function ContactForm({ compact = false }: { compact?: boolean }) {
       const body = await response.json() as { message?: string };
       setResult({ success: response.ok, message: body.message ?? 'Your message could not be sent. Please email Dennis.' });
       if (response.ok) { form.current?.reset(); requestId.current = undefined; }
-    } catch { setResult({ success: false, message: 'The connection failed. Please retry or email dennis@rcentz.cc.' }); }
+    } catch { setResult({ success: false, message: 'The connection failed. Please retry or email denngodfirst@gmail.com.' }); }
     finally {
       sendingRef.current = false;
       setSending(false);
@@ -72,7 +72,7 @@ export function ContactForm({ compact = false }: { compact?: boolean }) {
       </div>
       <div className={styles.honeypot} aria-hidden="true"><label htmlFor={`${prefix}-website`}>Leave this field empty</label><input id={`${prefix}-website`} name="website" tabIndex={-1} autoComplete="off" /></div>
       <label className={styles.consent}><input type="checkbox" name="consent" required /> <span>I agree to Dennis using these details to respond to my enquiry.</span></label>
-      {config?.enabled ? <div ref={challenge} className={styles.challenge} /> : <p className={styles.notice}>{config ? <>The form is being set up. You can email <a href="mailto:dennis@rcentz.cc">dennis@rcentz.cc</a> directly.</> : 'Loading contact form…'}</p>}
+      {config?.enabled ? <div ref={challenge} className={styles.challenge} /> : <p className={styles.notice}>{config ? <>The form is being set up. You can email <a href="mailto:denngodfirst@gmail.com">denngodfirst@gmail.com</a> directly.</> : 'Loading contact form…'}</p>}
       <button type="submit" disabled={sending || !token || !config?.enabled} className={styles.submit}>{sending ? 'Sending…' : 'Send message'}</button>
       {result ? <p role="status" className={styles.notice} data-success={result.success}>{result.message}</p> : null}
       <p className={styles.privacy}>Used to respond to your enquiry. Verification by Cloudflare; delivery by Resend.</p>

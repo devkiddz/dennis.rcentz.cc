@@ -1,4 +1,4 @@
-import 'server-only';
+﻿import 'server-only';
 import { createHmac } from 'node:crypto';
 import { validateContact } from './validation';
 
@@ -46,7 +46,7 @@ export async function handleContact(request: Request) {
   const origin = request.headers.get('origin');
   if (!origin || !allowedOrigins().includes(origin) || request.headers.get('sec-fetch-site') === 'cross-site') return response(403, 'This request could not be accepted.');
   if (request.headers.get('content-type')?.split(';')[0].trim() !== 'application/json') return response(415, 'Use the contact form to send your message.');
-  if (!publicContactConfig().enabled) return response(503, 'The contact form is unavailable. Please email dennis@rcentz.cc.');
+  if (!publicContactConfig().enabled) return response(503, 'The contact form is unavailable. Please email denngodfirst@gmail.com.');
   try {
     // Vercel overwrites forwarding headers. Email and global limits bound attempts independently of IP.
     const ip = (request.headers.get('x-vercel-forwarded-for') ?? request.headers.get('x-forwarded-for') ?? 'unknown').split(',')[0].trim();
@@ -64,10 +64,10 @@ export async function handleContact(request: Request) {
     if (!verification.success || !verification.hostname || !hostnames.includes(verification.hostname) || verification.action !== 'contact') return response(400, 'Verification expired or failed. Please verify again.');
     const from = process.env.CONTACT_FROM_EMAIL!;
     if (/[\r\n]/.test(from)) return response(503, 'The contact form is unavailable. Please email Dennis.');
-    const sent = await fetch('https://api.resend.com/emails', { method: 'POST', headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json', 'Idempotency-Key': `contact/${digest(JSON.stringify([input.requestId, input.name, input.email, input.company, input.subject, input.message]))}` }, body: JSON.stringify({ from, to: ['dennis@rcentz.cc'], reply_to: input.email, subject: `Portfolio enquiry: ${input.subject}`, text: `Name: ${input.name}\nEmail: ${input.email}\nCompany: ${input.company || 'Not supplied'}\nSubject: ${input.subject}\n\n${input.message}` }), signal: AbortSignal.timeout(10000), cache: 'no-store' });
+    const sent = await fetch('https://api.resend.com/emails', { method: 'POST', headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json', 'Idempotency-Key': `contact/${digest(JSON.stringify([input.requestId, input.name, input.email, input.company, input.subject, input.message]))}` }, body: JSON.stringify({ from, to: ['denngodfirst@gmail.com'], reply_to: input.email, subject: `Portfolio enquiry: ${input.subject}`, text: `Name: ${input.name}\nEmail: ${input.email}\nCompany: ${input.company || 'Not supplied'}\nSubject: ${input.subject}\n\n${input.message}` }), signal: AbortSignal.timeout(10000), cache: 'no-store' });
     if (!sent.ok) return response(502, 'Your message could not be sent. Please try again or email Dennis directly.');
     const delivery = await sent.json() as { id?: string };
     if (!delivery.id) return response(502, 'Your message could not be confirmed. Please email Dennis directly.');
     return response(200, 'Your message was accepted for delivery to Dennis. Thank you.');
-  } catch { return response(503, 'The contact form is temporarily unavailable. Please email dennis@rcentz.cc.'); }
+  } catch { return response(503, 'The contact form is temporarily unavailable. Please email denngodfirst@gmail.com.'); }
 }

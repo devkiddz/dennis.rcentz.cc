@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import { ArrowUp, ArrowUpRight, RotateCcw } from 'lucide-react';
@@ -50,7 +50,7 @@ export function Denok({ embedded = false, visible = true, onContact }: { embedde
       <button type="button" className={styles.overviewButton} onClick={() => answer('Give me a recruiter overview', 'overview')}>Recruiter overview <ArrowUpRight size={17} aria-hidden="true" /></button>
       <p className={styles.label}>Explore a topic</p>
       <div className={styles.topicList}>{denokKnowledge.filter(entry => entry.id !== 'overview').map(entry => <button key={entry.id} type="button" onClick={() => answer(entry.question, entry.id)}>{entry.question}</button>)}</div>
-      <p className={styles.asideNote}>Prefer a conversation with Dennis?<br /><a href="mailto:dennis@rcentz.cc">dennis@rcentz.cc</a></p>
+      <p className={styles.asideNote}>Prefer a conversation with Dennis?<br /><a href="mailto:denngodfirst@gmail.com">denngodfirst@gmail.com</a></p>
     </aside>
     <section className={styles.chat} aria-labelledby="denok-chat-heading">
       <div className={styles.chatHeader}><div className={styles.identity}><span className={styles.avatar} aria-hidden="true">D<span>·</span></span><div><h2 id="denok-chat-heading">Denok</h2><p>Dennis’s portfolio guide</p></div></div><button className={styles.reset} type="button" aria-label="Start a new conversation" disabled={!messages.length} onClick={() => { clearTimeout(replyTimer.current); pending.current = false; setTyping(false); setMessages([]); setQuestion(''); setFollowUps(openingSuggestions.slice(0, 3)); }}><RotateCcw size={17} aria-hidden="true" /><span>Start again</span></button></div>
@@ -62,7 +62,7 @@ export function Denok({ embedded = false, visible = true, onContact }: { embedde
           return <div key={message.id} className={styles.assistantMessage}>{entry ? <>{entry.answer.map(paragraph => <p key={paragraph}>{paragraph}</p>)}{entry.id === 'contact' && onContact ? <button type="button" className={styles.inlineContact} onClick={onContact}>Send Dennis a message <ArrowUpRight size={15} aria-hidden="true" /></button> : null}{entry.links?.length ? <div className={styles.answerLinks}>{entry.links.map(link => {
             const external = link.href.startsWith('https://');
             return <Link key={link.href} href={link.href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined}>{link.label}<ArrowUpRight size={15} aria-hidden="true" /></Link>;
-          })}</div> : null}</> : <><p>I don’t have a confident match for that question in Dennis’s portfolio information. Choose a topic below, try a specific project name, or contact Dennis directly.</p>{onContact ? <button type="button" className={styles.inlineContact} onClick={onContact}>Contact Dennis <ArrowUpRight size={15} aria-hidden="true" /></button> : <a className={styles.inlineContact} href="mailto:dennis@rcentz.cc">Email Dennis</a>}</>}</div>;
+          })}</div> : null}</> : <><p>I don’t have a confident match for that question in Dennis’s portfolio information. Choose a topic below, try a specific project name, or contact Dennis directly.</p>{onContact ? <button type="button" className={styles.inlineContact} onClick={onContact}>Contact Dennis <ArrowUpRight size={15} aria-hidden="true" /></button> : <a className={styles.inlineContact} href="mailto:denngodfirst@gmail.com">Email Dennis</a>}</>}</div>;
         })}
         {typing ? <div className={`${styles.assistantMessage} ${styles.typing}`} role="status" aria-label="Denok is typing"><span aria-hidden="true" /><span aria-hidden="true" /><span aria-hidden="true" /></div> : null}
         <div className={styles.suggestions} aria-label="Suggested questions">{followUps.map(id => { const entry = getKnowledgeEntry(id); return entry ? <button type="button" key={id} onClick={() => answer(entry.question, id)}>{entry.question}</button> : null; })}</div>

@@ -1,4 +1,4 @@
-import { projects } from '@/features/portfolio/projects';
+﻿import { projects } from '@/features/portfolio/projects';
 
 export type DenokKnowledgeEntry = {
   id: string;
@@ -93,8 +93,8 @@ export const denokKnowledge: DenokKnowledgeEntry[] = [
   {
     id: 'contact', category: 'contact', question: 'How can I contact him?',
     aliases: ['contact', 'email', 'contact Dennis', 'hire Dennis', 'availability', 'available for work', 'salary', 'pricing', 'rates', 'remote work', 'CV', 'resume', 'interview'],
-    answer: ['Email Dennis at dennis@rcentz.cc to discuss a role, a project, his current availability or a copy of his CV.', 'Denok does not confirm availability, salary expectations, rates or interview arrangements on his behalf. Those details should be agreed directly with Dennis.'],
-    links: [{ label: 'Email Dennis', href: 'mailto:dennis@rcentz.cc' }, { label: 'Dennis on GitHub', href: 'https://github.com/devkiddz' }],
+    answer: ['Email Dennis at denngodfirst@gmail.com to discuss a role, a project, his current availability or a copy of his CV.', 'Denok does not confirm availability, salary expectations, rates or interview arrangements on his behalf. Those details should be agreed directly with Dennis.'],
+    links: [{ label: 'Email Dennis', href: 'mailto:denngodfirst@gmail.com' }, { label: 'Dennis on GitHub', href: 'https://github.com/devkiddz' }],
     followUps: ['overview', 'projects', 'experience']
   }
 ];
