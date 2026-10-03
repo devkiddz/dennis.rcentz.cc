@@ -1,4 +1,4 @@
-﻿import Link from 'next/link';
+import Link from 'next/link';
 import { DenokTrigger } from '@/features/denok/DenokTrigger';
 import { BrandMark } from '@/components/brand/BrandMark';
 import { ArrowUpRight, Mail } from 'lucide-react';
@@ -25,6 +25,8 @@ export function SiteFooter() {
                 <SectionButton target="skills">Capabilities</SectionButton>
                 <Link href="/projects">Portfolio</Link>
                 <Link href="/services">Services</Link>
+                <Link href="/website-development">Website development in Nigeria</Link>
+                <Link href="/remote-website-development">Remote website development</Link>
                 <Link href="/contact">Contact Dennis</Link>
                 <DenokTrigger>Ask Denok</DenokTrigger>
               </nav>

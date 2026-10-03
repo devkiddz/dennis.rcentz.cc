@@ -1,4 +1,4 @@
-﻿import { projects } from '@/features/portfolio/projects';
+import { projects } from '@/features/portfolio/projects';
 
 export type DenokKnowledgeEntry = {
   id: string;
@@ -89,6 +89,13 @@ export const denokKnowledge: DenokKnowledgeEntry[] = [
     aliases: ['graphics', 'graphic design', 'imagery', 'design background', 'Rc Enterprize', 'Proart'],
     answer: ['His graphics and imagery work includes Rc Enterprize (June 2015–present) and 5d Imagery / Proart (August 2018–June 2019).', 'The responsibilities include branded promotional materials, commercial imagery, digital and print graphics, retouching and preparing images for production.'],
     followUps: ['experience', 'identity', 'contact']
+  },
+  {
+    id: 'remote-development', category: 'contact', question: 'Can Dennis build my website remotely?',
+    aliases: ['remote website development', 'remote website development services', 'international clients', 'website developer in Nigeria', 'website developer in Warri', 'website developer in Lagos', 'website development in Lekki', 'website development in Victoria Island', 'website development in Ikeja'],
+    answer: ['Dennis is based in Warri, Delta State, and welcomes business website and application enquiries from Lagos and across Nigeria, as well as remote enquiries from international teams.', 'Remote collaboration starts with an agreed scope, milestone reviews, communication arrangements and delivery requirements. Availability, pricing and meeting times are confirmed directly with Dennis.'],
+    links: [{ label: 'Website development in Nigeria', href: '/website-development' }, { label: 'Remote website development', href: '/remote-website-development' }, { label: 'Discuss your project', href: '/contact' }],
+    followUps: ['services', 'projects', 'contact']
   },
   {
     id: 'contact', category: 'contact', question: 'How can I contact him?',
