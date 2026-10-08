@@ -1,3 +1,4 @@
+import Script from 'next/script';
 import type { Metadata } from 'next';
 import { siteUrl, previewDeployment } from '@/lib/seo';
 
@@ -26,6 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="bg-background font-sans text-foreground antialiased">
+        <Script src="/rcentz-analytics.js" strategy="afterInteractive" data-collector="https://systems.rcentz.cc" data-site="https://dennis.rcentz.cc" />
         <ThemeProvider><a href="#main-content" className="skip-link">Skip to content</a>{children}<DenokWidget /></ThemeProvider>
       </body>
     </html>
