@@ -2,6 +2,7 @@
 
 import { getKnowledgeEntry } from './knowledge';
 import { interpretQuestion } from './match-question';
+import { trackDenok } from './telemetry';
 
 export type Message = { id: number; role: 'visitor'; text: string } | { id: number; role: 'denok'; entryId?: string; suggestionIds?: string[]; kind?: 'answer' | 'clarify' | 'unknown' };
 type Snapshot = { messages: Message[]; typing: boolean; storageAvailable: boolean };
@@ -65,6 +66,7 @@ function scheduleReply(visitor: Extract<Message, { role: 'visitor' }>, entryId?:
   snapshot = { ...snapshot, typing: true };
   emit();
   const delay = 1800 + Math.min(2000, (entry?.answer.join(' ').length ?? 300) * 3);
+  const replyStartedAt = performance.now();
   replyTimer = setTimeout(() => {
     // A reset or a newer restored conversation must not receive a stale reply.
     if (snapshot.messages[snapshot.messages.length - 1]?.id !== visitor.id) return;
@@ -72,6 +74,18 @@ function scheduleReply(visitor: Extract<Message, { role: 'visitor' }>, entryId?:
     snapshot = { ...snapshot, messages: [...snapshot.messages, reply].slice(-40), typing: false };
     persist();
     emit();
+
+    const outcome =
+      result.kind === 'answer'
+        ? 'answer_matched'
+        : result.kind === 'clarify'
+          ? 'clarification_offered'
+          : 'answer_unmatched';
+
+    trackDenok(
+      outcome,
+      Math.round(performance.now() - replyStartedAt)
+    );
   }, delay);
 }
 export function getConversationSnapshot() {
@@ -108,6 +122,7 @@ export function sendQuestion(text: string, entryId?: string) {
   const visitor: Message = { id: nextId++, role: 'visitor', text: question };
   snapshot = { ...snapshot, messages: [...snapshot.messages, visitor].slice(-40) };
   persist();
+  trackDenok('question_submitted');
   scheduleReply(visitor, entryId);
   return true;
 }

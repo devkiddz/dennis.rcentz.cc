@@ -13,6 +13,23 @@ export type DenokKnowledgeEntry = {
 
 export const denokKnowledge: DenokKnowledgeEntry[] = [
   {
+    id: 'greeting',
+    category: 'overview',
+    question: 'Say hello to Denok',
+    aliases: [
+      'hi', 'hello', 'hey', 'hiya', 'hey there',
+      'hello denok', 'hi denok', 'hey denok',
+      'good morning', 'good afternoon', 'good evening',
+      'good day', 'how are you', 'how are you doing',
+      'whats up', 'sup'
+    ],
+    answer: [
+      "Hello! I'm Denok, Dennis's portfolio assistant. I can help you explore his projects, skills, services and experience.",
+      "What would you like to know?"
+    ],
+    followUps: ['identity', 'projects', 'services']
+  },
+  {
     id: 'services', category: 'skills', question: 'What services does Dennis offer?',
     aliases: ['services', 'what services do you offer', 'what services does Dennis offer', 'what can you build', 'what can Dennis build', 'what does Dennis build', 'what websites does Dennis build', 'what website does Dennis build', 'what types of website does Dennis build', 'what types of websites does Dennis build', 'what type of website does Dennis build', 'what kind of websites does Dennis build', 'what kinds of websites does Dennis build', 'what kind of website does Dennis build', 'which websites does Dennis build', 'what websites can Dennis build', 'what types of websites can Dennis build', 'what websites do you build', 'what types of websites do you build', 'what kind of websites do you build', 'what type of website can you build', 'what websites can you build', 'does Dennis build websites', 'do you build websites', 'can Dennis build websites', 'website development services', 'website types', 'types of websites', 'what apps does Dennis build', 'what are Dennis services', 'what are his services', 'what services does he provide', 'what services are available', 'what can he develop', 'what sort of websites can he make', 'what can Dennis do for my business'],
     answer: ['Dennis builds business and corporate websites, portfolio sites and landing pages, online stores and multi-vendor marketplaces, job platforms, customer portals and custom web applications.', 'His services also cover mobile apps, fintech and banking interfaces, courier and shipment tracking systems, and improvements to existing websites.', 'Choose a project type below or share your brief. Scope, integrations, availability, delivery and pricing are confirmed directly with Dennis.'],

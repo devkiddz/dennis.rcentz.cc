@@ -31,7 +31,7 @@ export function Denok({ embedded = false, visible = true, onContact }: { embedde
       <p className={styles.label}>Start here</p>
       <button type="button" className={styles.overviewButton} onClick={() => answer('Give me a recruiter overview', 'overview')}>Recruiter overview <ArrowUpRight size={17} aria-hidden="true" /></button>
       <p className={styles.label}>Explore a topic</p>
-      <div className={styles.topicList}>{denokKnowledge.filter(entry => entry.id !== 'overview').map(entry => <button key={entry.id} type="button" onClick={() => answer(entry.question, entry.id)}>{entry.question}</button>)}</div>
+      <div className={styles.topicList}>{denokKnowledge.filter(entry => entry.id !== 'overview' && entry.id !== 'greeting').map(entry => <button key={entry.id} type="button" onClick={() => answer(entry.question, entry.id)}>{entry.question}</button>)}</div>
       <p className={styles.asideNote}>Prefer a conversation with Dennis?<br /><a href="mailto:denngodfirst@gmail.com" target="_blank" rel="noopener noreferrer">denngodfirst@gmail.com</a></p>
     </aside>
     <section className={styles.chat} aria-labelledby={headingId}>

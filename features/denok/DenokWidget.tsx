@@ -4,6 +4,7 @@ import { ArrowLeft, Bot, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { ContactForm } from '@/features/contact/ContactForm';
 import { Denok } from './Denok';
+import { trackDenok } from './telemetry';
 import styles from './DenokWidget.module.css';
 
 type Point = { x: number; y: number };
@@ -41,6 +42,7 @@ export function DenokWidget() {
       if (anchor) setPanelPosition(positionPanel(anchor));
       setStarted(true);
       setOpen(true);
+      trackDenok('opened');
     };
     window.addEventListener('denok:open', show);
     return () => window.removeEventListener('denok:open', show);
@@ -89,7 +91,7 @@ export function DenokWidget() {
         <div><h2 id="denok-widget-title">{contact ? 'Contact Dennis' : 'Ask Denok'}</h2><p>{contact ? 'Send a private enquiry' : 'Portfolio assistant · Automatic replies'}</p></div>
         <button type="button" ref={closeButton} onClick={close} aria-label="Close Denok chat"><X size={19} aria-hidden="true" /></button>
       </div>
-      <div className={styles.chatBody} hidden={contact}><Denok embedded visible={open && !contact} onContact={() => setContact(true)} /></div>
+      <div className={styles.chatBody} hidden={contact}><Denok embedded visible={open && !contact} onContact={() => { trackDenok('contact_opened'); setContact(true); }} /></div>
       {contact ? <div className={styles.contactBody}><button className={styles.back} type="button" onClick={() => setContact(false)}><ArrowLeft size={15} aria-hidden="true" /> Back to chat</button><ContactForm compact /></div> : null}
     </section> : null}
     <button type="button" ref={launcher} className={styles.launcher} title="Drag to move · Click to chat" aria-label={open ? 'Close Denok chat' : 'Chat with Denok; drag to move'} aria-expanded={open} aria-controls={started ? 'denok-livechat' : undefined} aria-haspopup="dialog"
@@ -103,7 +105,7 @@ export function DenokWidget() {
       onClick={event => {
         if (suppressClick.current) { suppressClick.current = false; return; }
         if (open) close();
-        else { opener.current = event.currentTarget; setPanelPosition(positionPanel(event.currentTarget.getBoundingClientRect())); setStarted(true); setOpen(true); }
+        else { opener.current = event.currentTarget; setPanelPosition(positionPanel(event.currentTarget.getBoundingClientRect())); setStarted(true); setOpen(true); trackDenok('opened'); }
       }}>
       {open ? <X size={21} aria-hidden="true" /> : <Bot size={26} aria-hidden="true" />}
     </button>
