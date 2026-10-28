@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { TrackedProjectLink } from './TrackedProjectLink';
 import { ArrowUpRight, Code2 } from 'lucide-react';
 import { StackBadge } from '@/features/skills/StackBadge';
 import { projects } from './projects';
@@ -15,8 +16,8 @@ export function ProjectCard({ project, compact = false }: { project: (typeof pro
         {screenshot ? <Image src={screenshot} alt={`${project.name} desktop screenshot`} width={1365} height={928} sizes={compact ? '(min-width: 1024px) 33vw, 100vw' : '(min-width: 640px) 50vw, 100vw'} className={styles.screenshotImage} /> : <div className={styles.cover} aria-hidden="true"><Code2 size={28} strokeWidth={1.5} /><span>{project.category}</span><strong>{project.name}</strong><div className={styles.coverLine} /></div>}
         <div className={styles.mediaOverlay} aria-hidden="true" />
         <div className={styles.mediaActions}>
-          {project.live ? <a href={project.live} target="_blank" rel="noopener noreferrer" aria-label={`View ${project.name} live`} title="Live project"><ArrowUpRight size={24} aria-hidden="true" /></a> : null}
-          <a href={project.github} target="_blank" rel="noopener noreferrer" aria-label={`View ${project.name} on GitHub`} title="GitHub"><svg width="23" height="23" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={stackBrands.GitHub.path} /></svg></a>
+          {project.live ? <TrackedProjectLink href={project.live} destination="live" aria-label={`View ${project.name} live`} title="Live project"><ArrowUpRight size={24} aria-hidden="true" /></TrackedProjectLink> : null}
+          <TrackedProjectLink href={project.github} destination="github" aria-label={`View ${project.name} on GitHub`} title="GitHub"><svg width="23" height="23" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={stackBrands.GitHub.path} /></svg></TrackedProjectLink>
         </div>
       </div>
       <div className={styles.body}>
